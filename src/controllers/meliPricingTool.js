@@ -1,6 +1,6 @@
 import axios from 'axios';
 import  { GoogleSpreadsheet } from 'google-spreadsheet';
-import * as token from "/Users/Franco/Desktop/credentials/FC.json" assert {type:'json'};
+import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};
 import informationTokensStatus from '../credentials/credenciales_definitivas.json' assert { type: "json" };
 import dotenv from "dotenv";
 dotenv.config({path:"../../.env"})
