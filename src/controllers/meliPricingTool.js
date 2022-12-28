@@ -7,7 +7,7 @@ dotenv.config({path:"../../.env"})
 
 let urlTodasPublicaciones = process.env.URL_TODAS_LAS_PUBLICACIONES;
 let headerTodasPublicaciones = {Authorization:"Bearer "+token.default.access_token};
-let paramsTodasPublicaciones = {limit:50, offset:0, total: 117};
+let paramsTodasPublicaciones = {limit:50, offset:0, limit: 100};
 //let urlVenti = "https://ventiapi.azurewebsites.net/api/products/list"
 //let headerVenti = {Authorization: "bearer 89CGDMDQWg0u6OmK_oVcnL4egMuqWpsU2vukOsV3oc9-b_KIDLVzRR2oMdLrW9jDEUnhIiRYakkNEtglSrzd3ckf6vyCdKmwZRzZGk20P-yKJ_9ZPW28Ort1uqBQWTC7pAltM3-SelOMzCjHTlmNwoYob1TDUY6rj4J_VrMdkO0z8i9zs-Nv--pS0rtUN9pgaQTIyOKKCGa6_M0173zNA29ScXJZoyC6NTfz_P2ZmKhqokEW-lW4yrGzQcMW2Drm"}
 
@@ -38,7 +38,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         let objetoProducto = {};
         let arrayStatusCalls = []
         //Obtiene el ID de cada elemento
-        for (let i=0; i<page; i++) {                                                            //Recorre página por página
+        for (let i=0; i<1; i++) {                                                            //Recorre página por página
             const pageitems = await axios({                                                     //Hace una nueva llamada
                 method:"get",
                 url:urlTodasPublicaciones+`?offset=${i * limit}`,                               //Se pasa por la url el número de offset actualizado, acorde a cada vuelta
@@ -52,10 +52,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
             })
             allItems.push(...pageitems.data.results);                                           //Pusheamos todos los resultados en el array allItems
         }
-        //console.log(allItems);
-
         
-
         //Este for recorre y nos brinda el link de la MLA y lo almacena en el array
         for(let i=0;i<allItems.length;i++){
             //console.log(arrayContenedorMLA[i]);
@@ -109,6 +106,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                         objetoProducto.sellerId                = arrayObjetos[i].seller_id;
                         objetoProducto.sellerName              = "";
                         objetoProducto.status                  = arrayObjetos[i].status;
+                        objetoProducto.linkImage               = arrayObjetos[i].thumbnail;
                         objetoProducto.original_price          = arrayObjetos[i].original_price;
                         objetoProducto.price                   = arrayObjetos[i].price;
                         objetoProducto.base_price              = arrayObjetos[i].base_price;
@@ -126,12 +124,13 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                         objetoProducto.varianteProducto        = true;
 
                         arrayElementosObjeto.push({
-                            MLA:                objetoProducto.id,
+                            MLM:                objetoProducto.id,
                             Estado:             objetoProducto.status,
                             title:              objetoProducto.title,
                             Seller:             objetoProducto.sellerName,
                             condition:          objetoProducto.condition,
                             Categoria:          objetoProducto.category_id,
+                            Imagen:             objetoProducto.linkImage,
                             listing_type_id:    objetoProducto.listing_type_id,
                             Envio_Gratis:       objetoProducto.free_shipping,
                             costoEnvioGratis:   objetoProducto.costoEnvioGratis,
@@ -164,6 +163,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 objetoProducto.sellerId                = arrayObjetos[i].seller_id;
                 objetoProducto.sellerName              = "";
                 objetoProducto.status                  = arrayObjetos[i].status;
+                objetoProducto.linkImage               = arrayObjetos[i].thumbnail;
                 objetoProducto.price                   = arrayObjetos[i].price;
                 objetoProducto.base_price              = arrayObjetos[i].base_price;
                 objetoProducto.domain_id               = arrayObjetos[i].domain_id;
@@ -185,6 +185,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                     Seller:             objetoProducto.sellerName,
                     condition:          objetoProducto.condition,
                     Categoria:          objetoProducto.category_id,
+                    Imagen:             objetoProducto.linkImage,
                     listing_type_id:    objetoProducto.listing_type_id,
                     Envio_Gratis:       objetoProducto.free_shipping,
                     costoEnvioGratis:   objetoProducto.costoEnvioGratis,
