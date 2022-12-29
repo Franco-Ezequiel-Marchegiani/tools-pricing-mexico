@@ -293,7 +293,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             celdaConsolidado.value = date;                                                          //Pisamos el valor y le colocamos el valor que nosotros queremos
             await consolidadoSheet.saveUpdatedCells();                                              //Guardamos los cambios y los subimos al Sheet
              
-            console.log('***finalizando impotacion de COL del Mes anterior ***');
         }
         //MES ANTERIOR MEX
         //async function shareMKT_MesActual_MEX () {
