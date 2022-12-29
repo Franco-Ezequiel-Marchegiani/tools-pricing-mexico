@@ -264,7 +264,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 
         //MES ANTERIOR COL
         async function shareMKT_MesAnterior_COL () {
-            await app_VentasSheet.addRows(ordersOutput);                                            //importa array de objetos en sheets
 
             /* Proceso Añadir Fecha a una sola celda */
             await r1Sheet.loadCells("A1");                                                          //Cargamos la celda a la que modificaremos
