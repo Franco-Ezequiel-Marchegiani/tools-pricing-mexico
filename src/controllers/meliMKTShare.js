@@ -310,7 +310,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             const celdaR1 = r1Sheet.getCellByA1("A1");                                              //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
             celdaR1.value = date;                                                                   //Pisamos el valor y le colocamos el valor que nosotros queremos
             await r1Sheet.saveUpdatedCells();                                                       //Guardamos los cambios y los subimos al Sheet
-            
             console.log('***Proceso de COL del Mes anterior finalizado correctamente***');
         }
         //MES ANTERIOR MEX
