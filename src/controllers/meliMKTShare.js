@@ -264,7 +264,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 
         //MES ANTERIOR COL
         async function shareMKT_MesAnterior_COL () {
-            await documento.useServiceAccountAuth(credencialesOrder);
             await documento.loadInfo();
         
             const app_VentasSheet =documento.sheetsByTitle['App_Ventas'];
