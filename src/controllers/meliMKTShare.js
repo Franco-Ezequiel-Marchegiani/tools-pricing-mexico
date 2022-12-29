@@ -297,7 +297,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             console.log('***Proceso de COL del Mes anterior finalizado correctamente***');
         }
         //MES ACTUAL COL
-        async function shareMKT_MesActual_COL () {
         }
         //MES ANTERIOR MEX
         //async function shareMKT_MesActual_MEX () {
