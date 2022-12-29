@@ -305,7 +305,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             const app_VentasSheet =documento.sheetsByTitle['App_Ventas'];
             const r1Sheet =documento.sheetsByTitle['R1'];
             const forecastSheet =documento.sheetsByTitle['Forecast'];
-            const consolidadoSheet =documento.sheetsByTitle['Consolidado'];
         }
         //MES ANTERIOR MEX
         //async function shareMKT_MesActual_MEX () {
