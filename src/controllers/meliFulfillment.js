@@ -36,7 +36,9 @@ const consultaAPI  = async (param) => {
         url: urlSeller,
         headers: {'Authorization':`Bearer ${token.default.access_token}`},
         params: {offset: 0}   
-    }) 
+    }).catch(function (error) {
+        console.log("Something's wrong");
+      }) 
     console.log(dataSeller.data);
     /* let urlPrueba = await axios({ 
         method:'get',
@@ -72,7 +74,9 @@ const consultaAPI  = async (param) => {
                 method:'get',
                 url: urlSeller+`&offset=${i * limit}`,
                 headers: {'Authorization':`Bearer ${token.default.access_token}`},
-            })
+            }).catch(function (error) {
+                console.log("Something's wrong");
+              })
             allItems.push(...pageItems.data.results)                                                    //Lo pusheamos al array allItems para obtener todos los productos en dicho array
         }
         /* Extraemos solo el id de cada producto */
@@ -84,7 +88,7 @@ const consultaAPI  = async (param) => {
 
         //Creamos almacenes de variables, para poder tener los valores de manera global
         let arrayContenedorInventoryIds = []                                                            //Se almacenan los inentory_id, que son utilizados para hacer la llamada al endpoint de fullfilment
-        let capturaMCO = []                                                                             //Se almacena el MCO según las cantidades de recorridas que se realice
+        let capturaMLM = []                                                                             //Se almacena el MCO según las cantidades de recorridas que se realice
         let responseAttributes                                                                          //Se almacena la propiedad de "atributos" del endpoint de Items - product
         let variationArray = []                                                                         //Se almacena el largo del array de las variattions (se utiliza más adelante para hacer una condicional, si tiene elementos, tiene variaciones)
         let variationArrayId = []                                                                       //Se almacenan el id de cada variación, se utiliza más adelante para hacer una llamada a un endpoint
@@ -97,7 +101,9 @@ const consultaAPI  = async (param) => {
                 method:'get',
                 url: `https://api.mercadolibre.com/items/${arrayContainerIDProductSeller[i].id}`,
                 headers: {'Authorization':`Bearer ${token.default.access_token}`},
-            });
+            }).catch(function (error) {
+                console.log("Something's wrong");
+              });
             //Una vez hecho eso, podemos acceder y extraer el inventory_id 
             let inventoryIdResponseAtributeData = responseAtributeData.data.inventory_id;                           //Por un lado extramos el que está a simple vista
             let inventoryIdResponseAtributeDataVariations = responseAtributeData.data.variations;                   //Y por otro lado, el de las variaciones
@@ -109,7 +115,7 @@ const consultaAPI  = async (param) => {
                 for (let indexChikitito = 0; indexChikitito < lengthArrayVariations; indexChikitito++) {             //Recorremos el largo del array de las variaciones                      
                     const element = inventoryIdResponseAtributeDataVariations[indexChikitito];                       //Llamamos a un array uy pusheamos los valores en el mismo
                     //console.log(element.inventory_id);
-                    capturaMCO.push(arrayContainerIDProductSeller[i].id);                                           //Le pasamos el MCO de cada producto, según si se repite, o no
+                    capturaMLM.push(arrayContainerIDProductSeller[i].id);                                           //Le pasamos el MCO de cada producto, según si se repite, o no
                     arrayContenedorInventoryIds.push(element.inventory_id)                                          //Almacenamos en el array el id de los inventory con variaciones
                     variationArray.push(element)                                                                    //Pasamos el array entero a la variable que ya declaramos, esto para ver de dónde tenemos que sacar el sku
                     variationArrayId.push(element.id)                                                               //Pasamos el array entero a la variable que ya declaramos, esto para ver de dónde tenemos que sacar el sku
@@ -134,7 +140,9 @@ const consultaAPI  = async (param) => {
                     },
                     url: `https://api.mercadolibre.com/stock/fulfillment/operations/search?`,      
                     headers: {'Authorization':`Bearer ${token.default.access_token}`},
-                });
+                }).catch(function (error) {
+                    console.log("Something's wrong");
+                  });
                 let{ data:{paging:{total}}  }=firstResponseStockData;                                   //Extraemos el total de producto en c/llamada
                 //Calculando el N° de páginas por llamada
                 let totalProducts = total;  
@@ -152,7 +160,9 @@ const consultaAPI  = async (param) => {
                             inventory_id: `${filtroInventoryIds[indexParams]}`
                         },
                         headers: {'Authorization':`Bearer ${token.default.access_token}`},
-                    });
+                    }).catch(function (error) {
+                        console.log("Something's wrong");
+                      });
                     let informacionData = responseStockData.data.results;                               //Almacenamos la data de resultados en una variable
                     if(i == pages){                                                                     //Si es la última página, reseteamos el valor del scroll por 0
                         params.scroll = ""
@@ -173,31 +183,34 @@ const consultaAPI  = async (param) => {
                         
                         }else{
                             //Si tiene variaciones, ejecuta esto
-                            const llamadaVarianteObjeto = await axios(`https://api.mercadolibre.com/items/${capturaMCO[indexParams]}/variations/${variationArrayId[indexParams]}`);//Pasamos el MCO & el ID de la variación para extraer el SKU
+                            const llamadaVarianteObjeto = await axios(`https://api.mercadolibre.com/items/${capturaMLM[indexParams]}/variations/${variationArrayId[indexParams]}`)
+                            .catch(function (error) {
+                                console.log("Something's wrong");
+                            });//Pasamos el MCO & el ID de la variación para extraer el SKU
                             let atributesVariantsProducts = llamadaVarianteObjeto.data.attributes;                                  //Almacenamos la respuesta en una variable
                             
                             sellerSKU_conVariaciones = atributesVariantsProducts.find(element => element.id == "SELLER_SKU");     //Hacemos que encuentre el objeto cuyo id sea Seller_SKU, y lo pasamos a la variable declarada fuera del if
                         }
                         const element = informacionData[i];                                         //Almacenamos cada objeto del array en una variable element
-                        let dateOfProduct = new Date(element.date_created).toISOString().slice(0,10);
+                        let dateOfProduct = new Date(element?.date_created).toISOString().slice(0,10);
                         
                         containerArrayStockProducts.push({                                          //Añadimos al array un objeto con los siguientes valores
-                                MCO:        capturaMCO[indexParams],
-                                id:         element.id,
-                                seller_id:  element.seller_id,
+                                MLM:        capturaMLM[indexParams],
+                                id:         element?.id,
+                                seller_id:  element?.seller_id,
                                 date_created:  dateOfProduct,
-                                type:  element.type,
-                                detail:  element.detail.available_quantity,
-                                //not_available_detail:  element.detail.not_available_detail,
-                                result:  element.result.total,
-                                result_available_quantity:  element.result.available_quantity,
-                                result_not_available_quantity:  element.result.not_available_quantity,
-                                //result_not_available_detail:  element.result.not_available_detail ? element.result.not_available_detail : "",
-                                external_references_type:  element.external_references[0]?.type,
-                                external_references_value:  element.external_references[0]?.value,
-                                inventory_id:  element.inventory_id,
+                                type:  element?.type,
+                                detail:  element?.detail.available_quantity,
+                                //not_available_detail:  element?.detail.not_available_detail,
+                                result:  element?.result.total,
+                                result_available_quantity:  element?.result.available_quantity,
+                                result_not_available_quantity:  element?.result.not_available_quantity,
+                                //result_not_available_detail:  element?.result.not_available_detail ? element?.result.not_available_detail : "",
+                                external_references_type:  element?.external_references[0]?.type,
+                                external_references_value:  element?.external_references[0]?.value,
+                                inventory_id:  element?.inventory_id,
                                 timestamp:      date,
-                                SKU:                      variationArray.length == 0 ? sellerSku : sellerSKU_conVariaciones.value_name,   //Si el array de variaciones es vacío, trae el sku de otro lado
+                                SKU:            variationArray.length == 0 ? sellerSku : sellerSKU_conVariaciones.value_name,   //Si el array de variaciones es vacío, trae el sku de otro lado
                         })
                     }
                 }

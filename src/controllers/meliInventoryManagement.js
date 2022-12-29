@@ -43,7 +43,9 @@ const consultaAPI  = async () => {
                method:'get',
                url: urlSeller+`&offset=${i * limit}`,
                headers: {'Authorization':`Bearer ${token.default.access_token}`},
-           });
+           }).catch(function (error) {
+            console.log("Something's wrong");
+            });
            allItems.push(...pageItems.data.results);
        }
        
@@ -69,7 +71,9 @@ const consultaAPI  = async () => {
                method:'get',
                url: `https://api.mercadolibre.com/items/${arrayContainerIDProductSeller[i].id}`,
                headers: {'Authorization':`Bearer ${token.default.access_token}`},
-           });   
+           }).catch(function (error) {
+            console.log("Something's wrong");
+          });   
             inventory_id_deCadaProducto = responseAtributeData.data.inventory_id                            //Almacenamos cada valor de "inventory_id" en una variable
            let inventoryIdResponseAtributeDataVariations = responseAtributeData.data.variations;            //Y por otro lado, el de las variaciones
            let lengthArrayVariations = inventoryIdResponseAtributeDataVariations.length;                    //Sacamos el largo, ya que no es el mismo, para luego iterarlo en un array
@@ -112,7 +116,9 @@ const consultaAPI  = async () => {
                     method:'get',
                     url: `https://api.mercadolibre.com/inventories/${filtroInventoryIds[indexInventory]}/stock/fulfillment`,
                     headers: {'Authorization':`Bearer ${token.default.access_token}`},
-                });
+                }).catch(function (error) {
+                    console.log("Something's wrong");
+                  });
                 //console.log(responseStockData.data);
                 //Almacenamos los valores en variables
                 let inventory_id                      = responseStockData.data.inventory_id;
