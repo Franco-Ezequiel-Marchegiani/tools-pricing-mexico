@@ -296,8 +296,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             console.log('***finalizando impotacion de COL del Mes anterior ***');
             console.log('***Proceso de COL del Mes anterior finalizado correctamente***');
         }
-        //MES ACTUAL COL
-        }
         //MES ANTERIOR MEX
         //async function shareMKT_MesActual_MEX () {
         //    const documento = new GoogleSpreadsheet(google_idMesAnterior_MEX);
