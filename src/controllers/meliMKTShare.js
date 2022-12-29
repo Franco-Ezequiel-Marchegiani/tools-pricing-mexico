@@ -264,7 +264,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 
         //MES ANTERIOR COL
         async function shareMKT_MesAnterior_COL () {
-            const documento = new GoogleSpreadsheet(google_idMesAnterior_COL);
             await documento.useServiceAccountAuth(credencialesOrder);
             await documento.loadInfo();
         
