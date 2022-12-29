@@ -291,7 +291,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             await consolidadoSheet.loadCells("A2");                                                 //Cargamos la celda a la que modificaremos
             const celdaConsolidado = consolidadoSheet.getCellByA1("A2");                            //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
             celdaConsolidado.value = date;                                                          //Pisamos el valor y le colocamos el valor que nosotros queremos
-            await consolidadoSheet.saveUpdatedCells();                                              //Guardamos los cambios y los subimos al Sheet
         }
         //MES ANTERIOR MEX
         //async function shareMKT_MesActual_MEX () {
