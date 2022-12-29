@@ -301,7 +301,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             const documento = new GoogleSpreadsheet(google_idMesActual_COL);
             await documento.useServiceAccountAuth(credencialesOrder);
             await documento.loadInfo();
-        
         }
         //MES ANTERIOR MEX
         //async function shareMKT_MesActual_MEX () {
