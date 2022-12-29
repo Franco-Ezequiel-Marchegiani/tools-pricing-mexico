@@ -264,7 +264,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 
         //MES ANTERIOR COL
         async function shareMKT_MesAnterior_COL () {
-            celdaForecast.value = date;                                                             //Pisamos el valor y le colocamos el valor que nosotros queremos
             await forecastSheet.saveUpdatedCells();                                                 //Guardamos los cambios y los subimos al Sheet
             
             await consolidadoSheet.loadCells("A2");                                                 //Cargamos la celda a la que modificaremos
