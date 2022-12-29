@@ -236,7 +236,7 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         //console.log(ordersOutput);
         
         const credencialesStatus = informationTokensStatus;
-        const googleIdCredenciales = process.env.ID_STATUS;
+        const googleIdCredenciales = process.env.GOOGLE_ID_SHAREMKT;
 
 
         const arrayStatusMeliIMStock = [{
@@ -254,7 +254,7 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         let google_idMesActual_COL = process.env.ID_MELIMKTSHARE_COL_MesActual;
         //MEX
         let google_idMesAnterior_MEX = process.env.ID_MELIMKTSHARE_MEX_MesAnterior;
-        let google_idMesActual_MEX = process.env.ID_MELIMKTSHARE_MEX_MesActual;
+        let google_idMesActual_MEX = process.env.GOOGLE_ID_SHAREMKT;
 
         //MES ANTERIOR COL
         async function shareMKT_MesAnterior_COL () {
@@ -321,7 +321,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             celdaConsolidado.value = date;                                                          //Pisamos el valor y le colocamos el valor que nosotros queremos
             await consolidadoSheet.saveUpdatedCells();                                              //Guardamos los cambios y los subimos al Sheet
              
-            console.log('***finalizando impotacion de COL del Mes anterior ***');
             console.log('***Proceso de COL del Mes anterior finalizado correctamente***');
         }
         //MES ANTERIOR MEX
