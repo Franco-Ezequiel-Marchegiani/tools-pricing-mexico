@@ -264,7 +264,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 
         //MES ANTERIOR COL
         async function shareMKT_MesAnterior_COL () {
-            /* Proceso Añadir Fecha a una sola celda */
             await r1Sheet.loadCells("A1");                                                          //Cargamos la celda a la que modificaremos
             const celdaR1 = r1Sheet.getCellByA1("A1");                                              //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
             celdaR1.value = date;                                                                   //Pisamos el valor y le colocamos el valor que nosotros queremos
