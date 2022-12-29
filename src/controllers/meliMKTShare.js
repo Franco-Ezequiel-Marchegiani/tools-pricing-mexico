@@ -264,7 +264,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 
         //MES ANTERIOR COL
         async function shareMKT_MesAnterior_COL () {
-            const forecastSheet =documento.sheetsByTitle['Forecast'];
             const consolidadoSheet =documento.sheetsByTitle['Consolidado'];
             
             //Plasmamos info en el App_Ventas
