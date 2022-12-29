@@ -264,7 +264,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 
         //MES ANTERIOR COL
         async function shareMKT_MesAnterior_COL () {
-            const celdaR1 = r1Sheet.getCellByA1("A1");                                              //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
             celdaR1.value = date;                                                                   //Pisamos el valor y le colocamos el valor que nosotros queremos
             await r1Sheet.saveUpdatedCells();                                                       //Guardamos los cambios y los subimos al Sheet
             
