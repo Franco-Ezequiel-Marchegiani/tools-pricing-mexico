@@ -308,7 +308,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             const consolidadoSheet =documento.sheetsByTitle['Consolidado'];
             
             //Plasmamos info en el App_Ventas
-console.log('***Proceso de COL del Mes anterior finalizado correctamente***');
         }
         //MES ANTERIOR MEX
         //async function shareMKT_MesActual_MEX () {
