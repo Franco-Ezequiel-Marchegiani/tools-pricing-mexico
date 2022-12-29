@@ -311,7 +311,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             await app_VentasSheet.clearRows();
             await app_VentasSheet.addRows(ordersOutput);                                            //importa array de objetos en sheets
 
-            /* Proceso Añadir Fecha a una sola celda */
             console.log('***Proceso de COL del Mes anterior finalizado correctamente***');
         }
         //MES ANTERIOR MEX
