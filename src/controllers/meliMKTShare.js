@@ -315,7 +315,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             const celdaForecast = forecastSheet.getCellByA1("A1:B2");                               //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
             celdaForecast.value = date;                                                             //Pisamos el valor y le colocamos el valor que nosotros queremos
             await forecastSheet.saveUpdatedCells();                                                 //Guardamos los cambios y los subimos al Sheet
-            
             console.log('***Proceso de COL del Mes anterior finalizado correctamente***');
         }
         //MES ANTERIOR MEX
