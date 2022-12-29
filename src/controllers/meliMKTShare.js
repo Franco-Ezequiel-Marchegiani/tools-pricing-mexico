@@ -317,7 +317,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             await forecastSheet.saveUpdatedCells();                                                 //Guardamos los cambios y los subimos al Sheet
             
             await consolidadoSheet.loadCells("A2");                                                 //Cargamos la celda a la que modificaremos
-            const celdaConsolidado = consolidadoSheet.getCellByA1("A2");                            //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
             console.log('***Proceso de COL del Mes anterior finalizado correctamente***');
         }
         //MES ANTERIOR MEX
