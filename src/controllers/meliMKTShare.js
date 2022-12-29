@@ -264,7 +264,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 
         //MES ANTERIOR COL
         async function shareMKT_MesAnterior_COL () {
-            await consolidadoSheet.loadCells("A2");                                                 //Cargamos la celda a la que modificaremos
         }
         //MES ANTERIOR MEX
         //async function shareMKT_MesActual_MEX () {
