@@ -16,7 +16,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
     try{
         /* Horarios */
         let now         = new Date();
-        let nowNumber   = now.getTime();
         let horas       = now.getHours();
         let minutos     = ("0" + now.getMinutes() ).slice(-2);  //Esto para que el formato de minuto sea "09" y no "9"
         let horaMinuto  = " " + horas + ":" + minutos;
@@ -259,7 +258,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         }
         const googleIdCredenciales = process.env.ID_STATUS
         const credencialesStatus = informationTokensStatus;
-        const googleIdCredencialesPrincipales = process.env.ID_PRICINGTOOL
+        const googleIdCredencialesPrincipales = process.env.GOOGLE_ID_MELI_FULFILLMENTMEX
 
 
         const arrayStatusMeliIMStock = [{
