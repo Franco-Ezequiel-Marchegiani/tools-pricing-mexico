@@ -302,7 +302,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             await documento.useServiceAccountAuth(credencialesOrder);
             await documento.loadInfo();
         
-            const app_VentasSheet =documento.sheetsByTitle['App_Ventas'];
         }
         //MES ANTERIOR MEX
         //async function shareMKT_MesActual_MEX () {
