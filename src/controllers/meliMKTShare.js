@@ -294,7 +294,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             await consolidadoSheet.saveUpdatedCells();                                              //Guardamos los cambios y los subimos al Sheet
              
             console.log('***finalizando impotacion de COL del Mes anterior ***');
-            console.log('***Proceso de COL del Mes anterior finalizado correctamente***');
         }
         //MES ANTERIOR MEX
         //async function shareMKT_MesActual_MEX () {
