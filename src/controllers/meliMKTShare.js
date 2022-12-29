@@ -311,7 +311,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             celdaR1.value = date;                                                                   //Pisamos el valor y le colocamos el valor que nosotros queremos
             await r1Sheet.saveUpdatedCells();                                                       //Guardamos los cambios y los subimos al Sheet
             
-            await forecastSheet.loadCells("A:B")                                                    //Cargamos la celda a la que modificaremos
             console.log('***Proceso de COL del Mes anterior finalizado correctamente***');
         }
         //MES ANTERIOR MEX
