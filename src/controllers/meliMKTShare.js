@@ -264,7 +264,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 
         //MES ANTERIOR COL
         async function shareMKT_MesAnterior_COL () {
-            await r1Sheet.saveUpdatedCells();                                                       //Guardamos los cambios y los subimos al Sheet
             
             await forecastSheet.loadCells("A:B")                                                    //Cargamos la celda a la que modificaremos
             const celdaForecast = forecastSheet.getCellByA1("A1:B2");                               //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
