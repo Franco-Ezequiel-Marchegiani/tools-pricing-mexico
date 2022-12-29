@@ -264,7 +264,7 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 
         //MES ANTERIOR COL
         async function shareMKT_MesAnterior_COL () {
-        }
+        
         //MES ANTERIOR MEX
         //async function shareMKT_MesActual_MEX () {
         //    const documento = new GoogleSpreadsheet(google_idMesAnterior_MEX);
