@@ -256,6 +256,12 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         let google_idMesAnterior_MEX = process.env.ID_MELIMKTSHARE_MEX_MesAnterior;
         let google_idMesActual_MEX = process.env.GOOGLE_ID_SHAREMKT;
 
+    
+
+
+
+
+
         //MES ANTERIOR COL
         async function shareMKT_MesAnterior_COL () {
             const documento = new GoogleSpreadsheet(google_idMesAnterior_COL);
@@ -306,7 +312,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             await app_VentasSheet.addRows(ordersOutput);                                            //importa array de objetos en sheets
 
             /* Proceso Añadir Fecha a una sola celda */
-            await r1Sheet.loadCells("A1");                                                          //Cargamos la celda a la que modificaremos
             console.log('***Proceso de COL del Mes anterior finalizado correctamente***');
         }
         //MES ANTERIOR MEX
