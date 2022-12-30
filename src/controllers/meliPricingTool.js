@@ -3,6 +3,8 @@ import  { GoogleSpreadsheet } from 'google-spreadsheet';
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};
 import informationTokensStatus from '../credentials/credenciales_definitivas.json' assert { type: "json" };
 import dotenv from "dotenv";
+import { exportSheet, dateToday, llamadaAPI } from '../funciones/funcionesUtiles';
+
 dotenv.config({path:"../../.env"})
 
 let urlTodasPublicaciones = process.env.URL_TODAS_LAS_PUBLICACIONES;
@@ -15,15 +17,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
     console.log("Está funcionando");
     try{
         /* Horarios */
-        let now         = new Date();
-        let horas       = now.getHours();
-        let minutos     = ("0" + now.getMinutes() ).slice(-2);  //Esto para que el formato de minuto sea "09" y no "9"
-        let horaMinuto  = " " + horas + ":" + minutos;
-        let dia         = ("0" + now.getDate()).slice(-2);      //Esto para que el formato de hora sea "09" y no "9"
-        let anio        = now.getFullYear();
-        let mes         = now.getMonth() + 1;
-        let hora_hoy    = dia + "/" + mes + "/" + anio;
-        let date        = hora_hoy + " " + horaMinuto;
+        dateToday();
         
         //Seteamos los valores de los parámetros en variables
         let limit = paramsTodasPublicaciones.limit;                                             //Contiene el límite de productos por página (50)
@@ -38,11 +32,14 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         let arrayStatusCalls = []
         //Obtiene el ID de cada elemento
         for (let i=0; i<1; i++) {                                                            //Recorre página por página
+            const pageitems =await llamadaAPI("get",urlTodasPublicaciones+`?offset=${i * limit}`,head)
+            /* 
+            FREE COMMITS
             const pageitems = await axios({                                                     //Hace una nueva llamada
                 method:"get",
                 url:urlTodasPublicaciones+`?offset=${i * limit}`,                               //Se pasa por la url el número de offset actualizado, acorde a cada vuelta
                 headers: head, 
-            })
+            }) */
             arrayStatusCalls.push({ 
                 allItemsPagination: pageitems.status,
                 arrayObjetosCall: 0,
@@ -146,7 +143,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                             fee:                objetoProducto.fee,
                             sku:                objetoProducto.sku,
                             variation:          objetoProducto.varianteProducto,
-                            timestamp:          date
+                            timestamp:          dateToday().date
                         })
                     }
 
@@ -199,7 +196,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                     fee:                objetoProducto.fee,
                     sku:                objetoProducto.sku,
                     variation:          objetoProducto.varianteProducto,
-                    timestamp:          date
+                    timestamp:          dateToday().date
                 })
             }
             
@@ -225,23 +222,31 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
 
             let paramsFee = {price: paramPrice, category_id: paramCategory_id, listing_type_id: paramListing_type_id};    //Recorre página por página
 
+            const pageitems =await llamadaAPI("get","https://api.mercadolibre.com/sites/MCO/listing_prices?",head, paramsFee)
+
+            /* 
+            FREE COMMITS
             const urlFee = await axios({                                                                     //Hace una nueva llamada
                 method:"get",
                 url: "https://api.mercadolibre.com/sites/MCO/listing_prices?",                               //Se pasa por la url el número de offset actualizado, acorde a cada vuelta
                 headers: head, 
                 params: paramsFee
-            })
+            }) */
             arrayStatusCalls.push({ urlFeeCall: urlFee.status});
             arrayElementosObjeto[i].fee = urlFee.data.sale_fee_amount;
         }
         
         /* Para obtener el costo de envio gratis */
         for (let i = 0; i < arrayElementosObjeto.length; i++) {
+            const urlCostoEnvio =await llamadaAPI("get",`https://api.mercadolibre.com/items/shipping_options/free?ids=${arrayElementosObjeto[i].MLA}`,head)
+
+            /* 
+            FREE COMMITS
             let urlCostoEnvio = await axios({
                 method: "get",
                 url: `https://api.mercadolibre.com/items/shipping_options/free?ids=${arrayElementosObjeto[i].MLA}`,
                 headers: head
-            })
+            }) */
 
             let dataCostoEnvio = urlCostoEnvio.data;                                                         //Extraemos de la url la data
             let avanceExtraccionObjeto = Object.values(dataCostoEnvio)[0];                                   //Como es solo un objeto, obtenemos el primer valor del mismo
@@ -262,12 +267,18 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
 
 
         const arrayStatusMeliIMStock = [{
-            Fecha_meliIMOrders:      hora_hoy,
-            Hora_meliIMOrders:       horaMinuto,
+            Fecha_meliIMOrders:      dateToday().hora_hoy,
+            Hora_meliIMOrders:       dateToday().horaMinuto,
 /*             Status_meliIMOrders:     dataSeller.status,
             Message_meliIMOrders:    dataSeller.statusText, */
         }];
-        console.log("Exportando al Sheet");
+
+        console.log('***Importando datos a spreadsheet***');
+        exportSheet(googleIdCredencialesPrincipales,credencialesStatus,'APP',arrayElementosObjeto);
+        console.log("***Finalizó proceso importación***");
+
+        /* 
+        FREE COMMITS
         (async () =>{
                     
             async function exportaSheet(){
@@ -280,7 +291,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 
                 await sheet.addRows(arrayElementosObjeto);                                          //Añade la información del array                
             };
-            /* async function expartasheetStatus(){
+             async function expartasheetStatus(){
                 const documentoStatus = new GoogleSpreadsheet(googleIdCredenciales);
                 await documentoStatus.useServiceAccountAuth(credencialesStatus);
                 await documentoStatus.loadInfo()
@@ -288,14 +299,14 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 const sheetStatus = documentoStatus.sheetsByTitle["COL Tools"];
                 
                 await sheetStatus.addRows(arrayStatusMeliIMStock)
-            } */
+            } 
             //Una vez que haya extraido toda la info de los productos disponibles, lo plasma en el Sheet
             console.log('***Importando datos a spreadsheet***');
             //Ejecuta el código y muestra los datos en el sheet
             exportaSheet()
             //expartasheetStatus()            //SI NO FUNCIONA REMOVER LA FUNCIÓN "expartasheetStatus" del Google Sheet
             console.log("***Finalizó proceso importación***");
-        })();
+        })(); */
         
     }
     catch(error){

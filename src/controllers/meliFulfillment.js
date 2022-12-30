@@ -3,13 +3,16 @@ import axios from 'axios';
 import  { GoogleSpreadsheet } from 'google-spreadsheet';
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};                // /Users/Franco/Desktop/credentials/FC.json
 import meliInventoryManagement from '../credentials/credenciales_definitivas.json' assert { type: "json" };  // Comienzo de exportacion a Gshhets.-
-
 import dotenv from "dotenv";
+import { exportSheet, dateToday, llamadaAPI } from '../funciones/funcionesUtiles';
 dotenv.config({path:"../../.env"})
 //Productos por vendedor: https://api.mercadolibre.com/users/394109866/items/search //Con el 394109866 cambiarlo a una variable
 
 let urlSeller = process.env.URL_SELLER_MELI_INVENTORY_MANAGEMENT;
 /* Horarios */
+dateToday();
+/* 
+FREE COMMITS
 let now                     = new Date();
 let nowNumber               = now.getTime();
 let horas                   = now.getHours();
@@ -22,7 +25,7 @@ let mes                     = now.getMonth() + 1;
 let dosMesesAntes           = ("0" + (mes -2)).slice(-2);
 let hora_hoy                = anio + "-" + mes + "-" + dia;
 let hora_hoyHaceDosMeses    = anio + "-" + dosMesesAntes + "-" + diaMas;
-let date                    = " " + horaMinuto + " " + hora_hoy;
+let date                    = " " + horaMinuto + " " + hora_hoy; */
 console.log(date);
 let params = {
     seller_id: "1206541284",                                                                             //De momento se trabaja con el seller_id hardcodeado, la idea es modularizar y que se modifique el seller_id y los token y se pasen por parámetro
@@ -31,16 +34,23 @@ let params = {
     
 }
 const consultaAPI  = async (param) => {
+    const head = {'Authorization':`Bearer ${token.default.access_token}`}
+    const dataSeller =await llamadaAPI("get",urlSeller,head,{offset: 0});
+
+    /* 
+    FREE COMMITS
     let dataSeller = await axios({ 
         method:'get',
         url: urlSeller,
-        headers: {'Authorization':`Bearer ${token.default.access_token}`},
+        headers: head,
         params: {offset: 0}   
     }).catch(function (error) {
         console.log("Something's wrong");
-      }) 
+      })  */
     console.log(dataSeller.data);
-    /* let urlPrueba = await axios({ 
+    /* 
+    FREE COMMITS
+    let urlPrueba = await axios({ 
         method:'get',
         url: "https://api.mercadolibre.com/items/MLA776626407"
     }) 
@@ -70,13 +80,17 @@ const consultaAPI  = async (param) => {
         let page                = Math.ceil(totalPublicaciones / limit);
         /* Extraemos la totalidad de los productos */
         for (let i = 0; i < page; i++) {
+            const pageItems =await llamadaAPI("get",urlSeller+`&offset=${i * limit}`,head);
+
+            /* 
+            FREE COMMITS
             let pageItems = await axios({ 
                 method:'get',
                 url: urlSeller+`&offset=${i * limit}`,
-                headers: {'Authorization':`Bearer ${token.default.access_token}`},
+                headers: head,
             }).catch(function (error) {
                 console.log("Something's wrong");
-              })
+              }) */
             allItems.push(...pageItems.data.results)                                                    //Lo pusheamos al array allItems para obtener todos los productos en dicho array
         }
         /* Extraemos solo el id de cada producto */
@@ -97,13 +111,15 @@ const consultaAPI  = async (param) => {
         //Acá se obtiene el inventory_id, pero pueden haber variaciones, y esas variaciones tienen su inventory_id
         for (let i = 0; i < allItems.length; i++) {
             //Después, hacemos una llamada a los items y le colocamos el ID de cada producto
-            let responseAtributeData = await axios({                                                    //Hace el llamado para extraer la info del producto del Vendedor
+            const responseAtributeData =await llamadaAPI("get",`https://api.mercadolibre.com/items/${arrayContainerIDProductSeller[i].id}`,head);
+
+            /* let responseAtributeData = await axios({                                                    //Hace el llamado para extraer la info del producto del Vendedor
                 method:'get',
                 url: `https://api.mercadolibre.com/items/${arrayContainerIDProductSeller[i].id}`,
-                headers: {'Authorization':`Bearer ${token.default.access_token}`},
+                headers: head,
             }).catch(function (error) {
                 console.log("Something's wrong");
-              });
+              }); */
             //Una vez hecho eso, podemos acceder y extraer el inventory_id 
             let inventoryIdResponseAtributeData = responseAtributeData.data.inventory_id;                           //Por un lado extramos el que está a simple vista
             let inventoryIdResponseAtributeDataVariations = responseAtributeData.data.variations;                   //Y por otro lado, el de las variaciones
@@ -132,6 +148,10 @@ const consultaAPI  = async (param) => {
             for (let indexParams = 0; indexParams < filtroInventoryIds.length; indexParams++) {
 
                 //Llamamos una vez para obtener la info de la paginación de los productos con el inventory_id
+                const firstResponseStockData =await llamadaAPI("get",`https://api.mercadolibre.com/stock/fulfillment/operations/search?`,head, {seller_id: "1206541284",inventory_id: `${filtroInventoryIds[indexParams]}`});
+                
+                /* 
+                FREE COMMITS
                 let firstResponseStockData = await axios({                                             
                     method:'get',
                     params: {
@@ -139,10 +159,10 @@ const consultaAPI  = async (param) => {
                         inventory_id: `${filtroInventoryIds[indexParams]}`                              //Pasamos el inventory_id y recorremos cada elemento, ya que es un array
                     },
                     url: `https://api.mercadolibre.com/stock/fulfillment/operations/search?`,      
-                    headers: {'Authorization':`Bearer ${token.default.access_token}`},
+                    headers: head,
                 }).catch(function (error) {
                     console.log("Something's wrong");
-                  });
+                  }); */
                 let{ data:{paging:{total}}  }=firstResponseStockData;                                   //Extraemos el total de producto en c/llamada
                 //Calculando el N° de páginas por llamada
                 let totalProducts = total;  
@@ -152,6 +172,10 @@ const consultaAPI  = async (param) => {
                 //Ahora sí, obteniendo la info de cuántas páginas son, recorremos y extraemos la info
                 for (let i = 0; i < page; i++) {
                     console.log(params);
+                    const responseStockData =await llamadaAPI("get",`https://api.mercadolibre.com/stock/fulfillment/operations/search?`,head, {seller_id: "1206541284",inventory_id: `${filtroInventoryIds[indexParams]}`});
+
+                    /* 
+                    FREE COMMITS
                     let responseStockData = await axios({                                               //Ejecutamos la segunda llamada, para extraer el resto de datos (totalStock, available_quantity,etc.)
                         method:'get',
                         url: `https://api.mercadolibre.com/stock/fulfillment/operations/search?`,       
@@ -159,10 +183,10 @@ const consultaAPI  = async (param) => {
                             seller_id: "1206541284",
                             inventory_id: `${filtroInventoryIds[indexParams]}`
                         },
-                        headers: {'Authorization':`Bearer ${token.default.access_token}`},
+                        headers: head,
                     }).catch(function (error) {
                         console.log("Something's wrong");
-                      });
+                      }); */
                     let informacionData = responseStockData.data.results;                               //Almacenamos la data de resultados en una variable
                     if(i == pages){                                                                     //Si es la última página, reseteamos el valor del scroll por 0
                         params.scroll = ""
@@ -209,7 +233,7 @@ const consultaAPI  = async (param) => {
                                 external_references_type:  element?.external_references[0]?.type,
                                 external_references_value:  element?.external_references[0]?.value,
                                 inventory_id:  element?.inventory_id,
-                                timestamp:      date,
+                                timestamp:      dateToday().date,
                                 SKU:            variationArray.length == 0 ? sellerSku : sellerSKU_conVariaciones.value_name,   //Si el array de variaciones es vacío, trae el sku de otro lado
                         })
                     }
@@ -219,6 +243,9 @@ const consultaAPI  = async (param) => {
         const   credenciales  = meliInventoryManagement;
         let     googleId      = process.env.GOOGLE_ID_MELI_INVENTORY_MANAGEMENT;                        //ID permisos GooglSheet
         let     googleIdPrueba      = "1-uct06J5dgM3HBNZ5U1t_cX6WqfPycvIVp2dL3DS_i8";                   //ID permisos GooglSheet
+        exportSheet(googleId,credenciales,'APP_Movimientos',containerArrayStockProducts)
+             /* 
+             FREE COMMITS
              (async () =>{
                 async function exportaSheet(){
                     const documento = new GoogleSpreadsheet(googleId);
@@ -235,7 +262,7 @@ const consultaAPI  = async (param) => {
                 //Ejecuta el código y muestra los datos en el sheet
                 exportaSheet()
                 console.log("***Finalizó proceso importación***");
-            })(); 
+            })();  */
             /*  (async () =>{
                 async function exportaSheet(){
                     const documento = new GoogleSpreadsheet(googleIdPrueba);

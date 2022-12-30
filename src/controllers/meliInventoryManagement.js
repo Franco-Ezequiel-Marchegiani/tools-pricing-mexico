@@ -3,9 +3,16 @@ import  { GoogleSpreadsheet } from 'google-spreadsheet';
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};                    // /Users/Franco/Desktop/credentials/FC.json
 import meliInventoryManagement from '../credentials/credenciales_definitivas.json' assert { type: "json" };      // Comienzo de exportacion a Gshhets.-
 import dotenv from "dotenv";
+import { exportSheet, dateToday, llamadaAPI } from '../funciones/funcionesUtiles';
+
 dotenv.config({path:"../../.env"});
 
 let urlSeller = process.env.URL_SELLER_MELI_INVENTORY_MANAGEMENT;
+/* Horarios */
+dateToday();
+
+/* 
+FREE COMMITS
 let now                     = new Date();
 let nowNumber               = now.getTime();
 let horas                   = now.getHours();
@@ -17,15 +24,20 @@ let mes                     = now.getMonth() + 1;
 let dosMesesAntes           = now.getMonth() + -1;
 let hora_hoy                = anio + "/" + mes + "/" + dia;
 let hora_hoyHaceDosMeses    = anio + "/" + dosMesesAntes + "/" + dia;
-let date                    = " " + horaMinuto + " " + hora_hoy;
+let date                    = " " + horaMinuto + " " + hora_hoy; */
 const consultaAPI  = async () => {
+    const head = {'Authorization':`Bearer ${token.default.access_token}`};
     console.log(token.default.access_token);
+    const dataSeller =await llamadaAPI("get",urlSeller,head,{offset: 0})
+
+    /* 
+    FREE COMMITS
     let dataSeller = await axios({ 
        method:'get',
        url: urlSeller,
-       headers: {'Authorization':`Bearer ${token.default.access_token}`},
+       headers: head,
        params: {offset: 0}   
-   });
+   }); */
 
    let allItems = [];
    let arrayContainerIDProductSeller = [];
@@ -39,13 +51,17 @@ const consultaAPI  = async () => {
        let page                = Math.ceil(totalPublicaciones / limit);
        /* Extraemos la totalidad de los productos */
        for (let i = 0; i < page; i++) {
+        const pageItems =await llamadaAPI("get",urlSeller+`&offset=${i * limit}`,head)
+
+           /* 
+           COMMITS
            let pageItems = await axios({ 
                method:'get',
                url: urlSeller+`&offset=${i * limit}`,
-               headers: {'Authorization':`Bearer ${token.default.access_token}`},
+               headers: head,
            }).catch(function (error) {
             console.log("Something's wrong");
-            });
+            }); */
            allItems.push(...pageItems.data.results);
        }
        
@@ -66,14 +82,16 @@ const consultaAPI  = async () => {
        let variationArray = []
        let variationArrayId = []
        for (let i = 0; i < allItems.length; i++) {
-
+            const responseAtributeData =await llamadaAPI("get",`https://api.mercadolibre.com/items/${arrayContainerIDProductSeller[i].id}`,head)
+           /* 
+           FREE COMMITS
            let responseAtributeData = await axios({                                                         //Hace el llamado para extraer la info del producto del Vendedor
                method:'get',
                url: `https://api.mercadolibre.com/items/${arrayContainerIDProductSeller[i].id}`,
-               headers: {'Authorization':`Bearer ${token.default.access_token}`},
+               headers: head,
            }).catch(function (error) {
             console.log("Something's wrong");
-          });   
+          });  */  
             inventory_id_deCadaProducto = responseAtributeData.data.inventory_id                            //Almacenamos cada valor de "inventory_id" en una variable
            let inventoryIdResponseAtributeDataVariations = responseAtributeData.data.variations;            //Y por otro lado, el de las variaciones
            let lengthArrayVariations = inventoryIdResponseAtributeDataVariations.length;                    //Sacamos el largo, ya que no es el mismo, para luego iterarlo en un array
@@ -111,14 +129,17 @@ const consultaAPI  = async () => {
                 }
 
                 /* Hasta acá tenemos el SKU del producto */
-    
+                const responseAtributeData =await llamadaAPI("get",`https://api.mercadolibre.com/inventories/${filtroInventoryIds[indexInventory]}/stock/fulfillment`,head)
+
+                /* 
+                FREE COMMITS
                 let responseStockData = await axios({                                                       //Ejecutamos la segunda llamada, para extraer el resto de datos (totalStock, available_quantity,etc.)
                     method:'get',
                     url: `https://api.mercadolibre.com/inventories/${filtroInventoryIds[indexInventory]}/stock/fulfillment`,
-                    headers: {'Authorization':`Bearer ${token.default.access_token}`},
+                    headers: head,
                 }).catch(function (error) {
                     console.log("Something's wrong");
-                  });
+                  }); */
                 //console.log(responseStockData.data);
                 //Almacenamos los valores en variables
                 let inventory_id                      = responseStockData.data.inventory_id;
@@ -140,13 +161,17 @@ const consultaAPI  = async () => {
                     //not_available_detail:           not_available_detail,
                     external_referencesId:          external_referencesId,
                     //external_referencesVariationId: external_referencesVariationId,
-                    timestamp: date,
+                    timestamp: dateToday().date,
                 });
         }
        
        const   credenciales  = meliInventoryManagement;
        let     googleId      = process.env.GOOGLE_ID_MELI_INVENTORY_MANAGEMENT_MEX;                             //ID permisos GooglSheet
-
+       console.log('***Importando datos a spreadsheet***');
+       exportSheet(googleId,credenciales,'APP_StockFull',containerArrayStockProducts);
+       console.log("***Finalizó proceso importación***");
+       /* 
+       FREE COMMITS
        (async () =>{
                    
            async function exportaSheet(){
@@ -163,7 +188,7 @@ const consultaAPI  = async () => {
            //Ejecuta el código y muestra los datos en el sheet
            exportaSheet()
            console.log("***Finalizó proceso importación***");
-       })();
+       })(); */
    } catch (error) {
        console.error(error);
    }  

@@ -1,11 +1,10 @@
-import axios from 'axios';
 //import { isTag } from 'cherio/lib/utils';
-import  { GoogleSpreadsheet } from 'google-spreadsheet';
-import credenciales from '../config/google.json' assert { type: "json" };           
-import credencialesOrder from '../credentials/credenciales_definitivas.json' assert { type: "json" };             
-import informationTokensStatus from '../config/credencialesStatus.json' assert { type: "json" };
+import  { GoogleSpreadsheet } from 'google-spreadsheet';        
+import credencialesOrder from '../credentials/credenciales_definitivas.json' assert { type: "json" };     
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};
 import dotenv from "dotenv";
+import { dateToday, llamadaAPI } from '../funciones/funcionesUtiles';
+
 dotenv.config({path:"../../.env"});
 let urlDet = process.env.URL_ORDERS;                                                                // Url para llamar por reclamos inviduales
 let url =   process.env.URL_ORDERS_SEARCH;                                                          // Url que consulta la totalidad de los reclamos de la cuenta
@@ -35,15 +34,23 @@ console.log('***Conectando con MELI API***');
 // Se realiza primer llamado, para tomar primera muestra y datos de paginacion
 const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTodasPublicaciones,url,head,param) => {    
     //console.log(response);
+    const response =await llamadaAPI("get",url,headerTodasPublicaciones,param)
+/* 
+    FREE COMMITS
     let response = await axios({
         method:'get',
         url: url,     
         headers: headerTodasPublicaciones,
         params: param,
-    });
-    //console.log(response);
+    }).catch(function (error) {
+        console.log("Something's wrong");
+      });  
+    console.log(response); */
     try{
         /* Horarios */
+        dateToday();
+        /* 
+        FREE COMMITS
         let now         = new Date();
         let nowNumber   = now.getTime();
         let horas       = now.getHours();
@@ -53,7 +60,7 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         let anio        = now.getFullYear();
         let mes         = now.getMonth() + 1;
         let hora_hoy    = dia + "/" + mes + "/" + anio;
-        let date        = hora_hoy + " " + horaMinuto;
+        let date        = hora_hoy + " " + horaMinuto; */
         
         const allItems = [];                                                                        //Array  contenedor del total de productos ()
         const arrayContenedorLinkMLA = [];                                                          //Contiene los links de cada producto
@@ -69,12 +76,16 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         let totalPaginas = Math.ceil(resultadosTodasLasOrdenesTotal / resultadosTodasLasOrdenesLimit);  //Lo dividimos, y obtenemos el número de páginas en total (redondea para arriba)
 
         for (let indexPaginacion = 0; indexPaginacion < totalPaginas; indexPaginacion++) {
+            const responseInBucle =await llamadaAPI("get",url,headerTodasPublicaciones,param)
+
+            /* 
+            FREE COMMITS
             let responseInBucle = await axios({
                 method:'get',
                 url: url,     
                 headers: headerTodasPublicaciones,
                 params: param,
-            });
+            }); */
             
             let responseData = responseInBucle.data.results;
             let scroll_id = responseInBucle.data.paging.scroll_id
@@ -97,12 +108,15 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         for(var i=1;i < pages; i++){                                                                //Comienza a ciclar a partir de la segunda pagina
             let resultPage =i*result_page;
             params.offset = resultPage;
+            const pageResponse =await llamadaAPI("get",url,head,param)
+            /* 
+            FREE COMMITS
             let pageResponse = await axios ({
                 method:'get',
                 url:url,
                 headers:head,
                 params:param
-            });
+            }); */
             let resultadosCadaOrden = pageResponse
             
             for(r in resultadosCadaOrden){
@@ -116,19 +130,26 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         const ordersOutput = [];
          for (let i = 0; i < orders.length; i++) {                                                  // Comienzo de segundo ciclo, para obtener el detalle de cada reclamo.-
             //console.log(orders[i].order_id);
+            const ordersDet =await llamadaAPI("get",urlDet+orders[i].order_id,head)
+
+            /* 
+            FREE COMMITS
             let ordersDet = await axios ({
                 method:'get',
                 url : urlDet+orders[i].order_id,
                 headers : head,
-            });   
+            });  */  
+            const shippingOrdersDet =await llamadaAPI("get",urlDet+orders[i].order_id+"/shipments",head)
 
+            /* 
+            FREE COMMITS
             let shippingOrdersDet = await axios ({
                 method:'get',
                 url : urlDet+orders[i].order_id+"/shipments",
                 headers : head,
             }).catch(function (error) { 
                 console.log("Nada por aquí mi loco");
-            }); 
+            });  */
             let responseShippingDetail = shippingOrdersDet?.data
             
             //console.log(shippingOrdersDet.data.order_id);
@@ -192,7 +213,7 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
                 "Sale_fee Order-Items":                     sale_fee,
                 "Sale_fee_Total":                           sale_feeTotal,
                 "Shipping_cost items - shipping_options":   shippingCost,
-                timestamp:                                  date,
+                timestamp:                                  dateToday().date,
                 Item_ID:                                    itemID,                                 //Traemos esta propiedad con un nombre compatible para utilizarla más adelante
                 fullTime:                                   dateCOL_Format, 
                 shipping_status:                                   responseShippingDetail?.status, 
@@ -202,10 +223,13 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         /* Extracción de datos Domain_id */
         for (let i = 0; i < ordersOutput.length; i++) {                                             //Itera el array de Objetos (todos los productos)
             
+            const callingItems =await llamadaAPI("get",process.env.URL_ITEM_DETAIL + ordersOutput[i].Item_ID)
+            /* 
+            FREE COMM
             let callingItems = await axios({
                 method: "get",
                 url: process.env.URL_ITEM_DETAIL + ordersOutput[i].Item_ID
-            });
+            }); */
             let responseCall = callingItems.data.domain_id;
             console.log(callingItems.data.domain_id);
             ordersOutput[i]["Domain-id  items-(endpoint)"] = responseCall;
@@ -214,11 +238,15 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         let linkShippingCost = process.env.URL_SHIPPING_COST;
         /* Extración de datos de Shipping_cost */
         for (let i = 0; i < orders.length; i++) {
+            const shippingCost =await llamadaAPI("get",linkShippingCost + ordersOutput[i].Item_ID, head)
+
+            /* 
+            FREE COMMITS
             let shippingCost = await axios ({
                 method:'get',
                 url : linkShippingCost + ordersOutput[i].Item_ID,
                 headers : head,
-            });  
+            });   */
             let responseEndpoint = shippingCost.data;                                                   //Se almacena el valor del endpoint en una variable
             let coverageOfEachShipping = Object.values(responseEndpoint)[0]                             //Se extrae el primer elemento del objeto del endpoint
             let objetoConPrecio = coverageOfEachShipping !== undefined ? coverageOfEachShipping.coverage : "Undefined";  //Condicional en caso de que la respuesta sea undefined
@@ -235,13 +263,12 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         Este es el endpoint, y se pasa el id por parámetro */
         //console.log(ordersOutput);
         
-        const credencialesStatus = informationTokensStatus;
         const googleIdCredenciales = process.env.GOOGLE_ID_SHAREMKT;
 
 
         const arrayStatusMeliIMStock = [{
-                Fecha_meliMKTShare:      dia,
-                Hora_meliMKTShare:       horaMinuto,
+                Fecha_meliMKTShare:      dateToday().dia,
+                Hora_meliMKTShare:       dateToday().horaMinuto,
                 Status_meliMKTShare:     response.status,
                 Message_meliMKTShare:    response.statusText,
         }];
@@ -250,52 +277,48 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         
         //Id's de Google 
         //COL
+        /* 
         let google_idMesAnterior_COL = process.env.ID_MELIMKTSHARE_COL_MesAnterior;
-        let google_idMesActual_COL = process.env.ID_MELIMKTSHARE_COL_MesActual;
+        let google_idMesActual_COL = process.env.ID_MELIMKTSHARE_COL_MesActual; 
+        */
         //MEX
         let google_idMesAnterior_MEX = process.env.ID_MELIMKTSHARE_MEX_MesAnterior;
-        let google_idMesActual_MEX = process.env.GOOGLE_ID_SHAREMKT;
-
-    
-
-
-
-
+        let google_idMesActual_MEX = process.env.ID_MELIMKTSHARE_MEX_MesActual;
 
         //MES ANTERIOR MEX
-        //async function shareMKT_MesActual_MEX () {
-        //    const documento = new GoogleSpreadsheet(google_idMesAnterior_MEX);
-        //    await documento.useServiceAccountAuth(credencialesOrder);
-        //    await documento.loadInfo();
-        //
-        //    const app_VentasSheet =documento.sheetsByTitle['App_Ventas'];
-        //    const r1Sheet =documento.sheetsByTitle['R1'];
-        //    const forecastSheet =documento.sheetsByTitle['Forecast'];
-        //    const consolidadoSheet =documento.sheetsByTitle['Consolidado'];
-        //    
-        //    //Plasmamos info en el App_Ventas
-        //    await app_VentasSheet.clearRows();
-        //    await app_VentasSheet.addRows(ordersOutput);                                            //importa array de objetos en sheets
-//
-        //    /* Proceso Añadir Fecha a una sola celda */
-        //    await r1Sheet.loadCells("A1");                                                          //Cargamos la celda a la que modificaremos
-        //    const celdaR1 = r1Sheet.getCellByA1("A1");                                              //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
-        //    celdaR1.value = date;                                                                   //Pisamos el valor y le colocamos el valor que nosotros queremos
-        //    await r1Sheet.saveUpdatedCells();                                                       //Guardamos los cambios y los subimos al Sheet
-        //    
-        //    await forecastSheet.loadCells("A:B")                                                    //Cargamos la celda a la que modificaremos
-        //    const celdaForecast = forecastSheet.getCellByA1("A1:B2");                               //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
-        //    celdaForecast.value = date;                                                             //Pisamos el valor y le colocamos el valor que nosotros queremos
-        //    await forecastSheet.saveUpdatedCells();                                                 //Guardamos los cambios y los subimos al Sheet
-        //    
-        //    await consolidadoSheet.loadCells("A2");                                                 //Cargamos la celda a la que modificaremos
-        //    const celdaConsolidado = consolidadoSheet.getCellByA1("A2");                            //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
-        //    celdaConsolidado.value = date;                                                          //Pisamos el valor y le colocamos el valor que nosotros queremos
-        //    await consolidadoSheet.saveUpdatedCells();                                              //Guardamos los cambios y los subimos al Sheet
-        //     
-        //    console.log('***finalizando impotacion de MEX del mes Anterior***');
-        //    console.log('***Proceso de MEX del mes Anterior, finalizado correctamente***');
-        //}          
+        async function shareMKT_MesAnterior_MEX () {
+            const documento = new GoogleSpreadsheet(google_idMesAnterior_MEX);
+            await documento.useServiceAccountAuth(credencialesOrder);
+            await documento.loadInfo();
+        
+            const app_VentasSheet =documento.sheetsByTitle['App_Ventas'];
+            const r1Sheet =documento.sheetsByTitle['R1'];
+            const forecastSheet =documento.sheetsByTitle['Forecast'];
+            const consolidadoSheet =documento.sheetsByTitle['Consolidado'];
+            
+            //Plasmamos info en el App_Ventas
+            await app_VentasSheet.clearRows();
+            await app_VentasSheet.addRows(ordersOutput);                                            //importa array de objetos en sheets
+
+            /* Proceso Añadir Fecha a una sola celda */
+            await r1Sheet.loadCells("A1");                                                          //Cargamos la celda a la que modificaremos
+            const celdaR1 = r1Sheet.getCellByA1("A1");                                              //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
+            celdaR1.value = dateToday().date;                                                                   //Pisamos el valor y le colocamos el valor que nosotros queremos
+            await r1Sheet.saveUpdatedCells();                                                       //Guardamos los cambios y los subimos al Sheet
+            
+            await forecastSheet.loadCells("A:B")                                                    //Cargamos la celda a la que modificaremos
+            const celdaForecast = forecastSheet.getCellByA1("A1:B2");                               //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
+            celdaForecast.value = dateToday().date;                                                             //Pisamos el valor y le colocamos el valor que nosotros queremos
+            await forecastSheet.saveUpdatedCells();                                                 //Guardamos los cambios y los subimos al Sheet
+            
+            await consolidadoSheet.loadCells("A2");                                                 //Cargamos la celda a la que modificaremos
+            const celdaConsolidado = consolidadoSheet.getCellByA1("A2");                            //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
+            celdaConsolidado.value = dateToday().date;                                                          //Pisamos el valor y le colocamos el valor que nosotros queremos
+            await consolidadoSheet.saveUpdatedCells();                                              //Guardamos los cambios y los subimos al Sheet
+             
+            console.log('***finalizando impotacion de MEX del mes Anterior***');
+            console.log('***Proceso de MEX del mes Anterior, finalizado correctamente***');
+        }          
         //MES ACTUAL MEX
         async function shareMKT_MesActual_MEX () {
             const documento = new GoogleSpreadsheet(google_idMesActual_MEX);
@@ -314,17 +337,17 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             /* Proceso Añadir Fecha a una sola celda */
             await r1Sheet.loadCells("A1");                                                          //Cargamos la celda a la que modificaremos
             const celdaR1 = r1Sheet.getCellByA1("A1");                                              //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
-            celdaR1.value = date;                                                                   //Pisamos el valor y le colocamos el valor que nosotros queremos
+            celdaR1.value = dateToday().date;                                                                   //Pisamos el valor y le colocamos el valor que nosotros queremos
             await r1Sheet.saveUpdatedCells();                                                       //Guardamos los cambios y los subimos al Sheet
             
             await forecastSheet.loadCells("A:B")                                                    //Cargamos la celda a la que modificaremos
             const celdaForecast = forecastSheet.getCellByA1("A1:B2");                               //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
-            celdaForecast.value = date;                                                             //Pisamos el valor y le colocamos el valor que nosotros queremos
+            celdaForecast.value = dateToday().date;                                                             //Pisamos el valor y le colocamos el valor que nosotros queremos
             await forecastSheet.saveUpdatedCells();                                                 //Guardamos los cambios y los subimos al Sheet
             
             await consolidadoSheet.loadCells("A2");                                                 //Cargamos la celda a la que modificaremos
             const celdaConsolidado = consolidadoSheet.getCellByA1("A2");                            //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
-            celdaConsolidado.value = date;                                                          //Pisamos el valor y le colocamos el valor que nosotros queremos
+            celdaConsolidado.value = dateToday().date;                                                          //Pisamos el valor y le colocamos el valor que nosotros queremos
             await consolidadoSheet.saveUpdatedCells();                                              //Guardamos los cambios y los subimos al Sheet
              
             console.log('***finalizando impotacion de MEX del mes Actual***');
@@ -339,8 +362,7 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             await sheetStatus.addRows(arrayStatusMeliIMStock);
         }
         expartasheetStatus(); */
-        shareMKT_MesAnterior_COL();   
-        shareMKT_MesActual_COL();   
+        shareMKT_MesAnterior_MEX();
         shareMKT_MesActual_MEX();   
     }
     catch(error){
