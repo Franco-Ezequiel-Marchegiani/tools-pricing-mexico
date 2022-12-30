@@ -4,7 +4,7 @@ import  { GoogleSpreadsheet } from 'google-spreadsheet';
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};                // /Users/Franco/Desktop/credentials/FC.json
 import meliInventoryManagement from '../credentials/credenciales_definitivas.json' assert { type: "json" };  // Comienzo de exportacion a Gshhets.-
 import dotenv from "dotenv";
-import { exportSheet, dateToday, llamadaAPI } from '../funciones/funcionesUtiles';
+import { exportSheet, dateToday, llamadaAPI } from '../funciones/funcionesUtiles.js';
 dotenv.config({path:"../../.env"})
 //Productos por vendedor: https://api.mercadolibre.com/users/394109866/items/search //Con el 394109866 cambiarlo a una variable
 
@@ -25,8 +25,9 @@ let mes                     = now.getMonth() + 1;
 let dosMesesAntes           = ("0" + (mes -2)).slice(-2);
 let hora_hoy                = anio + "-" + mes + "-" + dia;
 let hora_hoyHaceDosMeses    = anio + "-" + dosMesesAntes + "-" + diaMas;
-let date                    = " " + horaMinuto + " " + hora_hoy; */
+let date                    = " " + horaMinuto + " " + hora_hoy; 
 console.log(date);
+*/
 let params = {
     seller_id: "1206541284",                                                                             //De momento se trabaja con el seller_id hardcodeado, la idea es modularizar y que se modifique el seller_id y los token y se pasen por parámetro
     //date_from: hora_hoyHaceDosMeses,        
