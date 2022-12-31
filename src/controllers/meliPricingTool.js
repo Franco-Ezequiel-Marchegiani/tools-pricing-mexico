@@ -298,7 +298,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
             //Ejecuta el código y muestra los datos en el sheet
             exportaSheet()
             //expartasheetStatus()            //SI NO FUNCIONA REMOVER LA FUNCIÓN "expartasheetStatus" del Google Sheet
-            console.log("***Finalizó proceso importación***");
         })(); */
         
     }
