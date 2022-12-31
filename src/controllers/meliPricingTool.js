@@ -37,7 +37,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
             FREE COMMITS
             const pageitems = await axios({                                                     //Hace una nueva llamada
                 method:"get",
-                url:urlTodasPublicaciones+`?offset=${i * limit}`,                               //Se pasa por la url el número de offset actualizado, acorde a cada vuelta
             }) */
             arrayStatusCalls.push({ 
                 allItemsPagination: pageitems.status,
