@@ -235,7 +235,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
 
             /* 
             FREE COMMITS
-            let urlCostoEnvio = await axios({
             }) */
 
             let dataCostoEnvio = urlCostoEnvio.data;                                                         //Extraemos de la url la data
