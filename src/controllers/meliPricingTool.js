@@ -285,7 +285,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 await sheet.addRows(arrayElementosObjeto);                                          //Añade la información del array                
             };
              async function expartasheetStatus(){
-                const documentoStatus = new GoogleSpreadsheet(googleIdCredenciales);
         })(); */
         
     }
