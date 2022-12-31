@@ -294,7 +294,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 await sheetStatus.addRows(arrayStatusMeliIMStock)
             } 
             //Una vez que haya extraido toda la info de los productos disponibles, lo plasma en el Sheet
-            console.log('***Importando datos a spreadsheet***');
         })(); */
         
     }
