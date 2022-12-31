@@ -34,7 +34,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         for (let i=0; i<1; i++) {                                                            //Recorre página por página
             const pageitems =await llamadaAPI("get",urlTodasPublicaciones+`?offset=${i * limit}`,head)
             /* 
-            FREE COMMITS
             }) */
             arrayStatusCalls.push({ 
                 allItemsPagination: pageitems.status,
