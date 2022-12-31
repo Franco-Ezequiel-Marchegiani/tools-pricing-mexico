@@ -289,7 +289,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 await documentoStatus.useServiceAccountAuth(credencialesStatus);
                 await documentoStatus.loadInfo()
                 
-                const sheetStatus = documentoStatus.sheetsByTitle["COL Tools"];
         })(); */
         
     }
