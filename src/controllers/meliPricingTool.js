@@ -233,7 +233,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         for (let i = 0; i < arrayElementosObjeto.length; i++) {
             const urlCostoEnvio =await llamadaAPI("get",`https://api.mercadolibre.com/items/shipping_options/free?ids=${arrayElementosObjeto[i].MLA}`,head)
 
-            }) */
 
             let dataCostoEnvio = urlCostoEnvio.data;                                                         //Extraemos de la url la data
             let avanceExtraccionObjeto = Object.values(dataCostoEnvio)[0];                                   //Como es solo un objeto, obtenemos el primer valor del mismo
