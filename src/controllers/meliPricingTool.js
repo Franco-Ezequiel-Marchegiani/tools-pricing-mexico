@@ -270,7 +270,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         exportSheet(googleIdCredencialesPrincipales,credencialesStatus,'APP',arrayElementosObjeto);
         console.log("***Finalizó proceso importación***");
 
-})(); */
         
     }
     catch(error){
