@@ -36,7 +36,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
             /* 
             FREE COMMITS
             const pageitems = await axios({                                                     //Hace una nueva llamada
-                method:"get",
             }) */
             arrayStatusCalls.push({ 
                 allItemsPagination: pageitems.status,
