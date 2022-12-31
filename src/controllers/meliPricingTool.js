@@ -291,7 +291,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 
                 const sheetStatus = documentoStatus.sheetsByTitle["COL Tools"];
                 
-                await sheetStatus.addRows(arrayStatusMeliIMStock)
         })(); */
         
     }
