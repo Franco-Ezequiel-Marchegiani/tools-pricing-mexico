@@ -223,7 +223,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 method:"get",
                 url: "https://api.mercadolibre.com/sites/MCO/listing_prices?",                               //Se pasa por la url el número de offset actualizado, acorde a cada vuelta
                 headers: head, 
-                params: paramsFee
             }) */
             arrayStatusCalls.push({ urlFeeCall: urlFee.status});
             arrayElementosObjeto[i].fee = urlFee.data.sale_fee_amount;
