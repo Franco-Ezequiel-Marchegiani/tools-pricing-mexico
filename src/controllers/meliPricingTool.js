@@ -282,7 +282,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 const sheet = documento.sheetsByTitle['APP'];                                            //Selecciona la hoja a la cual plasmará el contenido, el valor se lo pasa por parámetro para no repetir
                 await sheet.clearRows();                                                            //Limpia las columnas                
                 
-                await sheet.addRows(arrayElementosObjeto);                                          //Añade la información del array                
         })(); */
         
     }
