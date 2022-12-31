@@ -35,7 +35,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
             const pageitems =await llamadaAPI("get",urlTodasPublicaciones+`?offset=${i * limit}`,head)
             /* 
             FREE COMMITS
-            const pageitems = await axios({                                                     //Hace una nueva llamada
             }) */
             arrayStatusCalls.push({ 
                 allItemsPagination: pageitems.status,
