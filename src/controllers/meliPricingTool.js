@@ -277,7 +277,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
             async function exportaSheet(){
                 const documento = new GoogleSpreadsheet(googleIdCredencialesPrincipales);
                 await documento.useServiceAccountAuth(credencialesStatus);
-                await documento.loadInfo();
 })(); */
         
     }
