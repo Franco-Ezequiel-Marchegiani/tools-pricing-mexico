@@ -295,7 +295,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
             } 
             //Una vez que haya extraido toda la info de los productos disponibles, lo plasma en el Sheet
             console.log('***Importando datos a spreadsheet***');
-            //Ejecuta el código y muestra los datos en el sheet
         })(); */
         
     }
