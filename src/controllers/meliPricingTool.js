@@ -290,7 +290,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 await documentoStatus.loadInfo()
                 
                 const sheetStatus = documentoStatus.sheetsByTitle["COL Tools"];
-                
         })(); */
         
     }
