@@ -234,7 +234,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
             const urlCostoEnvio =await llamadaAPI("get",`https://api.mercadolibre.com/items/shipping_options/free?ids=${arrayElementosObjeto[i].MLA}`,head)
 
             /* 
-            FREE COMMITS
             }) */
 
             let dataCostoEnvio = urlCostoEnvio.data;                                                         //Extraemos de la url la data
