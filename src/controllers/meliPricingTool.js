@@ -220,7 +220,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
             /* 
             FREE COMMITS
             const urlFee = await axios({                                                                     //Hace una nueva llamada
-                method:"get",
             }) */
             arrayStatusCalls.push({ urlFeeCall: urlFee.status});
             arrayElementosObjeto[i].fee = urlFee.data.sale_fee_amount;
