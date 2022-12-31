@@ -271,7 +271,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         console.log("***Finalizó proceso importación***");
 
         /* 
-        FREE COMMITS
 })(); */
         
     }
