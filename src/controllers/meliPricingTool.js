@@ -217,7 +217,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
 
             const pageitems =await llamadaAPI("get","https://api.mercadolibre.com/sites/MCO/listing_prices?",head, paramsFee)
 
-            /* 
             }) */
             arrayStatusCalls.push({ urlFeeCall: urlFee.status});
             arrayElementosObjeto[i].fee = urlFee.data.sale_fee_amount;
