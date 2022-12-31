@@ -33,7 +33,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         //Obtiene el ID de cada elemento
         for (let i=0; i<1; i++) {                                                            //Recorre página por página
             const pageitems =await llamadaAPI("get",urlTodasPublicaciones+`?offset=${i * limit}`,head)
-            /* 
             }) */
             arrayStatusCalls.push({ 
                 allItemsPagination: pageitems.status,
