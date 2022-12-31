@@ -238,7 +238,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
             let urlCostoEnvio = await axios({
                 method: "get",
                 url: `https://api.mercadolibre.com/items/shipping_options/free?ids=${arrayElementosObjeto[i].MLA}`,
-                headers: head
             }) */
 
             let dataCostoEnvio = urlCostoEnvio.data;                                                         //Extraemos de la url la data
