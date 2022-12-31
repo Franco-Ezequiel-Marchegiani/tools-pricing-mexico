@@ -288,7 +288,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 const documentoStatus = new GoogleSpreadsheet(googleIdCredenciales);
                 await documentoStatus.useServiceAccountAuth(credencialesStatus);
                 await documentoStatus.loadInfo()
-                
         })(); */
         
     }
