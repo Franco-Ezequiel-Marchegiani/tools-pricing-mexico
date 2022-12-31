@@ -283,7 +283,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 await sheet.clearRows();                                                            //Limpia las columnas                
                 
                 await sheet.addRows(arrayElementosObjeto);                                          //Añade la información del array                
-            };
         })(); */
         
     }
