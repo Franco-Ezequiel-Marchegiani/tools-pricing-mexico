@@ -278,8 +278,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 const documento = new GoogleSpreadsheet(googleIdCredencialesPrincipales);
                 await documento.useServiceAccountAuth(credencialesStatus);
                 await documento.loadInfo();
-
-            })(); */
+})(); */
         
     }
     catch(error){
