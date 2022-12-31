@@ -274,7 +274,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         FREE COMMITS
         (async () =>{
                     
-            async function exportaSheet(){
 })(); */
         
     }
