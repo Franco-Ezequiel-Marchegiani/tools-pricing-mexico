@@ -33,13 +33,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         //Obtiene el ID de cada elemento
         for (let i=0; i<1; i++) {                                                            //Recorre página por página
             const pageitems =await llamadaAPI("get",urlTodasPublicaciones+`?offset=${i * limit}`,head)
-            /* 
-            FREE COMMITS
-            const pageitems = await axios({                                                     //Hace una nueva llamada
-                method:"get",
-                url:urlTodasPublicaciones+`?offset=${i * limit}`,                               //Se pasa por la url el número de offset actualizado, acorde a cada vuelta
-                headers: head, 
-            }) */
             arrayStatusCalls.push({ 
                 allItemsPagination: pageitems.status,
                 arrayObjetosCall: 0,
@@ -224,14 +217,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
 
             const urlFee =await llamadaAPI("get","https://api.mercadolibre.com/sites/MCO/listing_prices?",head, paramsFee)
 
-            /* 
-            FREE COMMITS
-            const urlFee = await axios({                                                                     //Hace una nueva llamada
-                method:"get",
-                url: "https://api.mercadolibre.com/sites/MCO/listing_prices?",                               //Se pasa por la url el número de offset actualizado, acorde a cada vuelta
-                headers: head, 
-                params: paramsFee
-            }) */
             arrayStatusCalls.push({ urlFeeCall: urlFee.status});
             arrayElementosObjeto[i].fee = urlFee.data.sale_fee_amount;
         }
@@ -239,14 +224,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         /* Para obtener el costo de envio gratis */
         for (let i = 0; i < arrayElementosObjeto.length; i++) {
             const urlCostoEnvio =await llamadaAPI("get",`https://api.mercadolibre.com/items/shipping_options/free?ids=${arrayElementosObjeto[i].MLA}`,head)
-
-            /* 
-            FREE COMMITS
-            let urlCostoEnvio = await axios({
-                method: "get",
-                url: `https://api.mercadolibre.com/items/shipping_options/free?ids=${arrayElementosObjeto[i].MLA}`,
-                headers: head
-            }) */
 
             let dataCostoEnvio = urlCostoEnvio.data;                                                         //Extraemos de la url la data
             let avanceExtraccionObjeto = Object.values(dataCostoEnvio)[0];                                   //Como es solo un objeto, obtenemos el primer valor del mismo
@@ -278,36 +255,6 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         //await exportSheet(googleIdCredencialesPrincipales,credencialesStatus,'COL Tools',arrayStatusMeliIMStock);
         console.log("***Finalizó proceso importación***");
 
-        /* 
-        FREE COMMITS
-        (async () =>{
-                    
-            async function exportaSheet(){
-                const documento = new GoogleSpreadsheet(googleIdCredencialesPrincipales);
-                await documento.useServiceAccountAuth(credencialesStatus);
-                await documento.loadInfo();
-
-                const sheet = documento.sheetsByTitle['APP'];                                            //Selecciona la hoja a la cual plasmará el contenido, el valor se lo pasa por parámetro para no repetir
-                await sheet.clearRows();                                                            //Limpia las columnas                
-                
-                await sheet.addRows(arrayElementosObjeto);                                          //Añade la información del array                
-            };
-             async function expartasheetStatus(){
-                const documentoStatus = new GoogleSpreadsheet(googleIdCredenciales);
-                await documentoStatus.useServiceAccountAuth(credencialesStatus);
-                await documentoStatus.loadInfo()
-                
-                const sheetStatus = documentoStatus.sheetsByTitle["COL Tools"];
-                
-                await sheetStatus.addRows(arrayStatusMeliIMStock)
-            } 
-            //Una vez que haya extraido toda la info de los productos disponibles, lo plasma en el Sheet
-            console.log('***Importando datos a spreadsheet***');
-            //Ejecuta el código y muestra los datos en el sheet
-            exportaSheet()
-            //expartasheetStatus()            //SI NO FUNCIONA REMOVER LA FUNCIÓN "expartasheetStatus" del Google Sheet
-            console.log("***Finalizó proceso importación***");
-        })(); */
         
     }
     catch(error){
