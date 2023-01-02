@@ -3,7 +3,7 @@ import  { GoogleSpreadsheet } from 'google-spreadsheet';
 import credencialesOrder from '../credentials/credenciales_definitivas.json' assert { type: "json" };     
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};
 import dotenv from "dotenv";
-import { dateToday, llamadaAPI } from '../funciones/funcionesUtiles';
+import { dateToday, llamadaAPI } from '../funciones/funcionesUtiles.js';
 
 dotenv.config({path:"../../.env"});
 let urlDet = process.env.URL_ORDERS;                                                                // Url para llamar por reclamos inviduales
@@ -27,7 +27,8 @@ let params = {
     scroll_id: ""
 };
 
- 
+
+
 console.log('***Conectando con MELI API***');
 
     let orders=[]

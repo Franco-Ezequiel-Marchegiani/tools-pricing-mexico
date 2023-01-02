@@ -3,7 +3,7 @@ import  { GoogleSpreadsheet } from 'google-spreadsheet';
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};
 import informationTokensStatus from '../credentials/credenciales_definitivas.json' assert { type: "json" };
 import dotenv from "dotenv";
-import { exportSheet, dateToday, llamadaAPI } from '../funciones/funcionesUtiles';
+import { exportSheet, dateToday, llamadaAPI } from '../funciones/funcionesUtiles.js';
 
 dotenv.config({path:"../../.env"})
 
@@ -222,7 +222,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
 
             let paramsFee = {price: paramPrice, category_id: paramCategory_id, listing_type_id: paramListing_type_id};    //Recorre página por página
 
-            const pageitems =await llamadaAPI("get","https://api.mercadolibre.com/sites/MCO/listing_prices?",head, paramsFee)
+            const urlFee =await llamadaAPI("get","https://api.mercadolibre.com/sites/MCO/listing_prices?",head, paramsFee)
 
             /* 
             FREE COMMITS
@@ -261,7 +261,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                 arrayElementosObjeto[i].costoEnvioGratis = extraccionDatoFinal;                              //Acá reemplazamos el valor de costoEnvioGratis por el extraido
             }
         }
-        const googleIdCredenciales = process.env.ID_STATUS
+        const googleIdCredenciales = process.env.ID_PRICINGTOOL
         const credencialesStatus = informationTokensStatus;
         const googleIdCredencialesPrincipales = process.env.GOOGLE_ID_MELI_FULFILLMENTMEX
 
@@ -274,7 +274,8 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
         }];
 
         console.log('***Importando datos a spreadsheet***');
-        exportSheet(googleIdCredencialesPrincipales,credencialesStatus,'APP',arrayElementosObjeto);
+        await exportSheet(googleIdCredenciales,credencialesStatus,'APP',arrayElementosObjeto);
+        //await exportSheet(googleIdCredencialesPrincipales,credencialesStatus,'COL Tools',arrayStatusMeliIMStock);
         console.log("***Finalizó proceso importación***");
 
         /* 

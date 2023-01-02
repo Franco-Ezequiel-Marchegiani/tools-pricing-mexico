@@ -4,7 +4,7 @@ import  { GoogleSpreadsheet } from 'google-spreadsheet';
 import informationTokensStatus from '../credentials/credenciales_definitivas.json' assert { type: "json" };
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};            // /Users/Franco/Desktop/credentials/FC.json
 import dotenv from "dotenv";
-import { exportSheet, dateToday, llamadaAPI } from '../funciones/funcionesUtiles';
+import { exportSheet, dateToday, llamadaAPI } from '../funciones/funcionesUtiles.js';
 
 dotenv.config({path:"../../.env"});
 let urlDet ='https://api.mercadolibre.com/orders/';                                                 // Url para llamar por reclamos inviduales
@@ -34,6 +34,9 @@ console.log('***Conectando con MELI API***');
 let orders=[]
 const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTodasPublicaciones,url,head,param) => {    // Se realiza primer llamado, para tomar primera muestra y datos de paginacion
     const response =await llamadaAPI("get",url,headerTodasPublicaciones,param)
+
+
+    //Pegarle una ojeada el lunes, anda medio medio
 
     /* 
     FREE COMMITS
@@ -71,9 +74,9 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 
             //Desestructuramos la info de la API para traer la info necesaria, y la guardamos en una variable
             
-            let resultadosTodasLasOrdenesData = response.data.results;                                  //Almacenamos los resultados en una variable
-            let resultadosTodasLasOrdenesLimit = response.data.paging.limit;                            //Almacenamos el límite para calcular cuantas páginas son
-            let resultadosTodasLasOrdenesTotal = response.data.paging.total;                            //Almacenamos el total para calcular cuantas páginas son
+            let resultadosTodasLasOrdenesData   = response?.data.results;                                  //Almacenamos los resultados en una variable
+            let resultadosTodasLasOrdenesLimit  = response?.data.paging.limit;                            //Almacenamos el límite para calcular cuantas páginas son
+            let resultadosTodasLasOrdenesTotal  = response?.data.paging.total;                            //Almacenamos el total para calcular cuantas páginas son
             let totalPaginas = Math.ceil(resultadosTodasLasOrdenesTotal / resultadosTodasLasOrdenesLimit);  //Lo dividimos, y obtenemos el número de páginas en total (redondea para arriba)
 
             for (let indexPaginacion = 0; indexPaginacion < totalPaginas; indexPaginacion++) {
@@ -182,7 +185,7 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             /* Extracción de datos Domain_id */
             
             for (let i = 0; i < ordersOutput.length; i++) {                                             //Itera el array de Objetos (todos los productos)
-                const ordersDet =await llamadaAPI("get",process.env.URL_ITEM_DETAIL + ordersOutput[i].Item_IDhead)
+                const callingItems =await llamadaAPI("get",process.env.URL_ITEM_DETAIL + ordersOutput[i].Item_ID)
 
                 /* 
                 FREE COMMITS
@@ -190,8 +193,8 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
                     method: "get",
                     url: process.env.URL_ITEM_DETAIL + ordersOutput[i].Item_ID
                 }); */
-                let responseCall = callingItems.data.domain_id;
-                console.log(callingItems.data.domain_id);
+                let responseCall = callingItems?.data.domain_id;
+                console.log(callingItems?.data.domain_id);
                 ordersOutput[i].Domain_id = responseCall;
             };
             console.log(ordersOutput);
