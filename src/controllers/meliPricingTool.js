@@ -156,12 +156,12 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                     Categoria:          objetoProducto.category_id,
                     catalog_listing:    objetoProducto.catalog_listing, 
                     Envio_Gratis:       objetoProducto.free_shipping,
-                    costoEnvioGratis:   objetoProducto.costoEnvioGratis,
                     logistic_type:      objetoProducto.logistic_type,
                     me_Flex:            objetoProducto.me_Flex,      
                     iva:                objetoProducto.iva,
                     fee:                objetoProducto.fee,
                     sku:                objetoProducto.sku,
+                    costoEnvioGratis:   objetoProducto.costoEnvioGratis,
                     variation:          objetoProducto.varianteProducto,
                     timestamp:          dateToday().date
                 })
