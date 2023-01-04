@@ -85,24 +85,16 @@ const consultaAPI  = async () => {
                 /* Hasta acá tenemos el SKU del producto */
                 const responseAtributeData =await llamadaAPI("get",`https://api.mercadolibre.com/inventories/${filtroInventoryIds[indexInventory]}/stock/fulfillment`,head)
 
-                //Almacenamos los valores en variables
-                let inventory_id                      = responseStockData.data.inventory_id;
-                let totalStock                      = responseStockData.data.total;
-                let available_quantity              = responseStockData.data.available_quantity;
-                let not_available_quantity          = responseStockData.data.not_available_quantity;
-                let not_available_detail            = responseStockData.data.not_available_detail[0]?.status;
-                let external_referencesId           = responseStockData.data.external_references[0]?.id;
-                let external_referencesVariationId  = responseStockData.data.external_references[0]?.variation_id;
-    
+                
                 //Pasamos los valores dentro de un objeto, al array "containerArrayStockProducts"
                  containerArrayStockProducts.push({
                     MCO:                            capturaMCO[indexInventory],
                     SellerSKU:                      variationArray.length == 0 ? sellerSku : sellerSKU_conVariaciones.value_name,   //Si el array de variaciones es vacío, trae el sku de otro lado
-                    inventory_id:                   inventory_id,
-                    totalStock:                     totalStock,
-                    available_quantity:             available_quantity,
-                    not_available_quantity:         not_available_quantity,
-                    external_referencesId:          external_referencesId,
+                    inventory_id:                   responseStockData.data.inventory_id,
+                    totalStock:                     responseStockData.data.total,
+                    available_quantity:             responseStockData.data.available_quantity,
+                    not_available_quantity:         responseStockData.data.not_available_quantity,
+                    external_referencesId:          responseStockData.data.external_references[0]?.id,
                     timestamp: dateToday().date,
                 });
         }
@@ -117,6 +109,16 @@ const consultaAPI  = async () => {
 }
 consultaAPI()
 
+/* 
+                //Almacenamos los valores en variables
+                let inventory_id                      = responseStockData.data.inventory_id;
+                let totalStock                      = responseStockData.data.total;
+                let available_quantity              = responseStockData.data.available_quantity;
+                let not_available_quantity          = responseStockData.data.not_available_quantity;
+                let external_referencesId           = responseStockData.data.external_references[0]?.id;
+                let not_available_detail            = responseStockData.data.not_available_detail[0]?.status;
+                let external_referencesVariationId  = responseStockData.data.external_references[0]?.variation_id;
+                 */
 /* 
        FREE COMMITS
        (async () =>{

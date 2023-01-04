@@ -118,17 +118,10 @@ console.log('***Conectando con MELI API***');
             //console.log(response.order_items[0].unit_price);
             let idItems = response.id;
             let idItemsToString     = idItems.toString();
-            let status              = response.status;
             let pack_id             = response.pack_id;
-            let category_id         = response.order_items[0].item.category_id;
             let cantidadProductos   = response.order_items[0].quantity;
-            let valorTotal          = response.total_amount;
-            let unit_price          = response.order_items[0].unit_price;
-            let seller_sku          = response.order_items[0].item.seller_sku;
-            let itemID              = response.order_items[0].item.id;
             let sale_fee            = response.order_items[0].sale_fee;
-            let sale_feeTotal       = sale_fee * cantidadProductos;
-            let shippingCost        = response.payments[0].shipping_cost;
+            
             if (pack_id == null || pack_id == "null") {                                             //Añadí una condicional, si está vacío, que devuelva un " - "
                 pack_id = "null"
             }
@@ -145,8 +138,8 @@ console.log('***Conectando con MELI API***');
                 "Seller_SKU Order-Items":                   response.order_items[0].item.seller_sku,
                 "Item_ID Order-Items":                      response.order_items[0].item.id,
                 "Sale_fee Order-Items":                     response.order_items[0].sale_fee,
-                "Sale_fee_Total":                           sale_feeTotal,
-                "Shipping_cost items - shipping_options":   shippingCost,
+                "Sale_fee_Total":                           sale_fee * cantidadProductos,
+                "Shipping_cost items - shipping_options":   response.payments[0].shipping_cost,
                 timestamp:                                  dateToday().date,
                 Item_ID:                                    response.order_items[0].item.id,                                 //Traemos esta propiedad con un nombre compatible para utilizarla más adelante
                 fullTime:                                   dateCOL_Format, 
@@ -205,6 +198,16 @@ console.log('***Conectando con MELI API***');
 }
 callMeli(urlTodasPublicaciones,headerTodasPublicaciones, paramsTodasPublicaciones, url,headers,params);
 
+/* 
+            let status              = response.status;
+            let category_id         = response.order_items[0].item.category_id;
+            let valorTotal          = response.total_amount;
+            let unit_price          = response.order_items[0].unit_price;
+            let seller_sku          = response.order_items[0].item.seller_sku;
+            let itemID              = response.order_items[0].item.id;
+            let sale_feeTotal       = sale_fee * cantidadProductos;
+            let shippingCost        = response.payments[0].shipping_cost; 
+            */
 /* const googleIdCredenciales = process.env.GOOGLE_ID_SHAREMKT;
 
         const arrayStatusMeliIMStock = [{
