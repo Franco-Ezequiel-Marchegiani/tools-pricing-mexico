@@ -126,7 +126,7 @@ const consultaAPI  = async (param) => {
                         containerArrayStockProducts.push({                                          //Añadimos al array un objeto con los siguientes valores
                                 MLM:        capturaMLM[indexParams],
                                 id:         element?.id,
-                                seller_id:  element?.seller_id,
+                                seller_id:                      element?.seller_id,
                                 date_created:                   dateOfProduct,
                                 type:                           element?.type,
                                 detail:                         element?.detail.available_quantity,
