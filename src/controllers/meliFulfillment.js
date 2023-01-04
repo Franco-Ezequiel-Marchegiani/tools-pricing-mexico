@@ -1,6 +1,5 @@
 
 import axios from 'axios';
-//import  { GoogleSpreadsheet } from 'google-spreadsheet';
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};                // /Users/Franco/Desktop/credentials/FC.json
 import meliInventoryManagement from '../credentials/credenciales_definitivas.json' assert { type: "json" };  // Comienzo de exportacion a Gshhets.-
 import dotenv from "dotenv";
@@ -118,7 +117,7 @@ const consultaAPI  = async (param) => {
                         
                         }else{
                             //Si tiene variaciones, ejecuta esto
-                            const llamadaVarianteObjeto = await axios(`https://api.mercadolibre.com/items/${capturaMLM[indexParams]}/variations/${variationArrayId[indexParams]}`)
+                            const llamadaVarianteObjeto = await llamadaAPI("get", `https://api.mercadolibre.com/items/${capturaMLM[indexParams]}/variations/${variationArrayId[indexParams]}`)
                             .catch(function (error) {
                                 console.log("Something's wrong");
                             });//Pasamos el MCO & el ID de la variación para extraer el SKU
@@ -157,6 +156,7 @@ const consultaAPI  = async (param) => {
     }
 }
 consultaAPI(params);
+//import  { GoogleSpreadsheet } from 'google-spreadsheet';
 /* 
                     FREE COMMITS
                     let responseStockData = await axios({                                               //Ejecutamos la segunda llamada, para extraer el resto de datos (totalStock, available_quantity,etc.)
