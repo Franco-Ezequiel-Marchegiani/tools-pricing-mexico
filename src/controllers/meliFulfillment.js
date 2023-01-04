@@ -11,23 +11,7 @@ dotenv.config({path:"../../.env"})
 let urlSeller = process.env.URL_SELLER_MELI_INVENTORY_MANAGEMENT;
 /* Horarios */
 dateToday();
-/* 
-FREE COMMITS
-let now                     = new Date();
-let nowNumber               = now.getTime();
-let horas                   = now.getHours();
-let minutos                 = ("0" + now.getMinutes() ).slice(-2);                                      //Esto para que el formato de minuto sea "09" y no "9"
-let horaMinuto              = " " + horas + ":" + minutos;
-let dia                     = ("0" + now.getDate()).slice(-2);                                          //Esto para que el formato de hora sea "09" y no "9"
-let diaMas                     = ("0" + (now.getDate() +1)).slice(-2);                                  //Esto para que el formato de hora sea "09" y no "9"
-let anio                    = now.getFullYear();
-let mes                     = now.getMonth() + 1;
-let dosMesesAntes           = ("0" + (mes -2)).slice(-2);
-let hora_hoy                = anio + "-" + mes + "-" + dia;
-let hora_hoyHaceDosMeses    = anio + "-" + dosMesesAntes + "-" + diaMas;
-let date                    = " " + horaMinuto + " " + hora_hoy; 
-console.log(date);
-*/
+
 let params = {
     seller_id: "1206541284",                                                                             //De momento se trabaja con el seller_id hardcodeado, la idea es modularizar y que se modifique el seller_id y los token y se pasen por parámetro
     //date_from: hora_hoyHaceDosMeses,        
@@ -37,37 +21,8 @@ let params = {
 const consultaAPI  = async (param) => {
     const head = {'Authorization':`Bearer ${token.default.access_token}`}
     const dataSeller =await llamadaAPI("get",urlSeller,head,{offset: 0});
-
-    /* 
-    FREE COMMITS
-    let dataSeller = await axios({ 
-        method:'get',
-        url: urlSeller,
-        headers: head,
-        params: {offset: 0}   
-    }).catch(function (error) {
-        console.log("Something's wrong");
-      })  */
     console.log(dataSeller.data);
-    /* 
-    FREE COMMITS
-    let urlPrueba = await axios({ 
-        method:'get',
-        url: "https://api.mercadolibre.com/items/MLA776626407"
-    }) 
-    let objetoPrueba = urlPrueba.data;
-    let arrayPrueba = [];
-    arrayPrueba.push({
-        id : objetoPrueba.id,
-        site_id : objetoPrueba.site_id,
-        title : objetoPrueba.title,
-        seller_id : objetoPrueba.seller_id,
-        category_id : objetoPrueba.category_id,
-        official_store_id : objetoPrueba.official_store_id,
-        price : objetoPrueba.price,
-        base_price : objetoPrueba.base_price,
-        original_price : objetoPrueba.original_
-    }) */
+
     let allItems = [];                                                                                  //Contiene todos los items por vendedor
     let arrayContainerIDProductSeller = [];                                                             //Contiene el ID del producto por vendedor
     let objContenedor = {};                                                                             //Objeto vacío para luego añadir el id de cada item
@@ -83,15 +38,7 @@ const consultaAPI  = async (param) => {
         for (let i = 0; i < page; i++) {
             const pageItems =await llamadaAPI("get",urlSeller+`&offset=${i * limit}`,head);
 
-            /* 
-            FREE COMMITS
-            let pageItems = await axios({ 
-                method:'get',
-                url: urlSeller+`&offset=${i * limit}`,
-                headers: head,
-            }).catch(function (error) {
-                console.log("Something's wrong");
-              }) */
+            
             allItems.push(...pageItems.data.results)                                                    //Lo pusheamos al array allItems para obtener todos los productos en dicho array
         }
         /* Extraemos solo el id de cada producto */
@@ -107,20 +54,14 @@ const consultaAPI  = async (param) => {
         let responseAttributes                                                                          //Se almacena la propiedad de "atributos" del endpoint de Items - product
         let variationArray = []                                                                         //Se almacena el largo del array de las variattions (se utiliza más adelante para hacer una condicional, si tiene elementos, tiene variaciones)
         let variationArrayId = []                                                                       //Se almacenan el id de cada variación, se utiliza más adelante para hacer una llamada a un endpoint
-        //Acá está la magia, Iteramos todos los productos en el array allItems 
+        //Iteramos todos los productos en el array allItems 
         //Se llama al endpoint de items, para obtener la info del producto, y extraer el inventory_id
         //Acá se obtiene el inventory_id, pero pueden haber variaciones, y esas variaciones tienen su inventory_id
         for (let i = 0; i < allItems.length; i++) {
             //Después, hacemos una llamada a los items y le colocamos el ID de cada producto
             const responseAtributeData =await llamadaAPI("get",`https://api.mercadolibre.com/items/${arrayContainerIDProductSeller[i].id}`,head);
 
-            /* let responseAtributeData = await axios({                                                    //Hace el llamado para extraer la info del producto del Vendedor
-                method:'get',
-                url: `https://api.mercadolibre.com/items/${arrayContainerIDProductSeller[i].id}`,
-                headers: head,
-            }).catch(function (error) {
-                console.log("Something's wrong");
-              }); */
+            
             //Una vez hecho eso, podemos acceder y extraer el inventory_id 
             let inventoryIdResponseAtributeData = responseAtributeData.data.inventory_id;                           //Por un lado extramos el que está a simple vista
             let inventoryIdResponseAtributeDataVariations = responseAtributeData.data.variations;                   //Y por otro lado, el de las variaciones
@@ -131,19 +72,14 @@ const consultaAPI  = async (param) => {
 
                 for (let indexChikitito = 0; indexChikitito < lengthArrayVariations; indexChikitito++) {             //Recorremos el largo del array de las variaciones                      
                     const element = inventoryIdResponseAtributeDataVariations[indexChikitito];                       //Llamamos a un array uy pusheamos los valores en el mismo
-                    //console.log(element.inventory_id);
                     capturaMLM.push(arrayContainerIDProductSeller[i].id);                                           //Le pasamos el MCO de cada producto, según si se repite, o no
                     arrayContenedorInventoryIds.push(element.inventory_id)                                          //Almacenamos en el array el id de los inventory con variaciones
                     variationArray.push(element)                                                                    //Pasamos el array entero a la variable que ya declaramos, esto para ver de dónde tenemos que sacar el sku
                     variationArrayId.push(element.id)                                                               //Pasamos el array entero a la variable que ya declaramos, esto para ver de dónde tenemos que sacar el sku
                 }
-             
-            //console.log(arrayContenedorInventoryIds);}
-        }
+            }
             let filtroInventoryIds = arrayContenedorInventoryIds.filter(element => element !== null)        //Luego filtramos los que tienen valor null
             params.inventory_id = filtroInventoryIds                                                        //Y pasamos los valores a los parámetros
-            //console.log(params);
-            //console.log(filtroInventoryIds);
 
             //Acá recorremos el número de veces en los que hayan inventorys ID, contando los que están a simple vista, o los de variaciones
             for (let indexParams = 0; indexParams < filtroInventoryIds.length; indexParams++) {
@@ -151,23 +87,9 @@ const consultaAPI  = async (param) => {
                 //Llamamos una vez para obtener la info de la paginación de los productos con el inventory_id
                 const firstResponseStockData =await llamadaAPI("get",`https://api.mercadolibre.com/stock/fulfillment/operations/search?`,head, {seller_id: "1206541284",inventory_id: `${filtroInventoryIds[indexParams]}`});
                 
-                /* 
-                FREE COMMITS
-                let firstResponseStockData = await axios({                                             
-                    method:'get',
-                    params: {
-                        seller_id: "1206541284",
-                        inventory_id: `${filtroInventoryIds[indexParams]}`                              //Pasamos el inventory_id y recorremos cada elemento, ya que es un array
-                    },
-                    url: `https://api.mercadolibre.com/stock/fulfillment/operations/search?`,      
-                    headers: head,
-                }).catch(function (error) {
-                    console.log("Something's wrong");
-                  }); */
                 let{ data:{paging:{total}}  }=firstResponseStockData;                                   //Extraemos el total de producto en c/llamada
                 //Calculando el N° de páginas por llamada
                 let totalProducts = total;  
-                //console.log(total);
                 let limite = 1000;
                 let pages = Math.ceil(totalProducts/limite)                                             // Calculo matematico para obtener cantidad de paginas
                 //Ahora sí, obteniendo la info de cuántas páginas son, recorremos y extraemos la info
@@ -175,19 +97,7 @@ const consultaAPI  = async (param) => {
                     console.log(params);
                     const responseStockData =await llamadaAPI("get",`https://api.mercadolibre.com/stock/fulfillment/operations/search?`,head, {seller_id: "1206541284",inventory_id: `${filtroInventoryIds[indexParams]}`});
 
-                    /* 
-                    FREE COMMITS
-                    let responseStockData = await axios({                                               //Ejecutamos la segunda llamada, para extraer el resto de datos (totalStock, available_quantity,etc.)
-                        method:'get',
-                        url: `https://api.mercadolibre.com/stock/fulfillment/operations/search?`,       
-                        params: {
-                            seller_id: "1206541284",
-                            inventory_id: `${filtroInventoryIds[indexParams]}`
-                        },
-                        headers: head,
-                    }).catch(function (error) {
-                        console.log("Something's wrong");
-                      }); */
+                    
                     let informacionData = responseStockData.data.results;                               //Almacenamos la data de resultados en una variable
                     if(i == pages){                                                                     //Si es la última página, reseteamos el valor del scroll por 0
                         params.scroll = ""
@@ -226,11 +136,9 @@ const consultaAPI  = async (param) => {
                                 date_created:  dateOfProduct,
                                 type:  element?.type,
                                 detail:  element?.detail.available_quantity,
-                                //not_available_detail:  element?.detail.not_available_detail,
                                 result:  element?.result.total,
                                 result_available_quantity:  element?.result.available_quantity,
                                 result_not_available_quantity:  element?.result.not_available_quantity,
-                                //result_not_available_detail:  element?.result.not_available_detail ? element?.result.not_available_detail : "",
                                 external_references_type:  element?.external_references[0]?.type,
                                 external_references_value:  element?.external_references[0]?.value,
                                 inventory_id:  element?.inventory_id,
@@ -240,12 +148,32 @@ const consultaAPI  = async (param) => {
                     }
                 }
             }
-        
         const   credenciales  = meliInventoryManagement;
         let     googleId      = process.env.GOOGLE_ID_MELI_INVENTORY_MANAGEMENT;                        //ID permisos GooglSheet
         let     googleIdPrueba      = "1-uct06J5dgM3HBNZ5U1t_cX6WqfPycvIVp2dL3DS_i8";                   //ID permisos GooglSheet
         exportSheet(googleId,credenciales,'APP_Movimientos',containerArrayStockProducts)
+    }catch(err){
+        console.log(err);
+    }
+}
+consultaAPI(params);
+/* 
+                    FREE COMMITS
+                    let responseStockData = await axios({                                               //Ejecutamos la segunda llamada, para extraer el resto de datos (totalStock, available_quantity,etc.)
+                        method:'get',
+                        url: `https://api.mercadolibre.com/stock/fulfillment/operations/search?`,       
+                        params: {
+                            seller_id: "1206541284",
+                            inventory_id: `${filtroInventoryIds[indexParams]}`
+                        },
+                        headers: head,
+                    }).catch(function (error) {
+                        console.log("Something's wrong");
+             }); */
              /* 
+             //not_available_detail:  element?.detail.not_available_detail,
+             /result_not_available_detail:  element?.result.not_available_detail ? element?.result.not_available_detail : "",
+
              FREE COMMITS
              (async () =>{
                 async function exportaSheet(){
@@ -281,8 +209,97 @@ const consultaAPI  = async (param) => {
                 exportaSheet()
                 console.log("***Finalizó proceso importación***");
             })();  */
-    }catch(err){
-        console.log(err);
-    }
-}
-consultaAPI(params);
+            /* 
+FREE COMMITS
+let now                     = new Date();
+let nowNumber               = now.getTime();
+let horas                   = now.getHours();
+let minutos                 = ("0" + now.getMinutes() ).slice(-2);                                      //Esto para que el formato de minuto sea "09" y no "9"
+let horaMinuto              = " " + horas + ":" + minutos;
+let dia                     = ("0" + now.getDate()).slice(-2);                                          //Esto para que el formato de hora sea "09" y no "9"
+let diaMas                     = ("0" + (now.getDate() +1)).slice(-2);                                  //Esto para que el formato de hora sea "09" y no "9"
+let anio                    = now.getFullYear();
+let mes                     = now.getMonth() + 1;
+let dosMesesAntes           = ("0" + (mes -2)).slice(-2);
+let hora_hoy                = anio + "-" + mes + "-" + dia;
+let hora_hoyHaceDosMeses    = anio + "-" + dosMesesAntes + "-" + diaMas;
+let date                    = " " + horaMinuto + " " + hora_hoy; 
+console.log(date);
+*/
+    /* 
+    FREE COMMITS
+    let dataSeller = await axios({ 
+        method:'get',
+        url: urlSeller,
+        headers: head,
+        params: {offset: 0}   
+    }).catch(function (error) {
+        console.log("Something's wrong");
+      })  */
+    /* 
+    FREE COMMITS
+    let urlPrueba = await axios({ 
+        method:'get',
+        url: "https://api.mercadolibre.com/items/MLA776626407"
+    }) 
+    let objetoPrueba = urlPrueba.data;
+    let arrayPrueba = [];
+    arrayPrueba.push({
+        id : objetoPrueba.id,
+        site_id : objetoPrueba.site_id,
+        title : objetoPrueba.title,
+        seller_id : objetoPrueba.seller_id,
+        category_id : objetoPrueba.category_id,
+        official_store_id : objetoPrueba.official_store_id,
+        price : objetoPrueba.price,
+        base_price : objetoPrueba.base_price,
+        original_price : objetoPrueba.original_
+    }) */
+    /* 
+                FREE COMMITS
+                let firstResponseStockData = await axios({                                             
+                    method:'get',
+                    params: {
+                        seller_id: "1206541284",
+                        inventory_id: `${filtroInventoryIds[indexParams]}`                              //Pasamos el inventory_id y recorremos cada elemento, ya que es un array
+                    },
+                    url: `https://api.mercadolibre.com/stock/fulfillment/operations/search?`,      
+                    headers: head,
+                }).catch(function (error) {
+                    console.log("Something's wrong");
+                  }); */
+                                  //console.log(total);
+                  /* 
+            FREE COMMITS
+            let pageItems = await axios({ 
+                method:'get',
+                url: urlSeller+`&offset=${i * limit}`,
+                headers: head,
+            }).catch(function (error) {
+                console.log("Something's wrong");
+              }) */
+              /* let responseAtributeData = await axios({                                                    //Hace el llamado para extraer la info del producto del Vendedor
+                method:'get',
+                url: `https://api.mercadolibre.com/items/${arrayContainerIDProductSeller[i].id}`,
+                headers: head,
+            }).catch(function (error) {
+                console.log("Something's wrong");
+              }); */
+              //console.log(element.inventory_id);
+            //console.log(arrayContenedorInventoryIds);}
+            //console.log(params);
+            //console.log(filtroInventoryIds);
+            /* 
+                FREE COMMITS
+                let firstResponseStockData = await axios({                                             
+                    method:'get',
+                    params: {
+                        seller_id: "1206541284",
+                        inventory_id: `${filtroInventoryIds[indexParams]}`                              //Pasamos el inventory_id y recorremos cada elemento, ya que es un array
+                    },
+                    url: `https://api.mercadolibre.com/stock/fulfillment/operations/search?`,      
+                    headers: head,
+                }).catch(function (error) {
+                    console.log("Something's wrong");
+                  }); */
+                                  //console.log(total);
