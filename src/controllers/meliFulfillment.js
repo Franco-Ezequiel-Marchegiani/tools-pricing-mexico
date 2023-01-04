@@ -13,7 +13,6 @@ let params = {
     seller_id: "1206541284",                                                                             //De momento se trabaja con el seller_id hardcodeado, la idea es modularizar y que se modifique el seller_id y los token y se pasen por parámetro
     //date_from: hora_hoyHaceDosMeses,        
     //date_to: hora_hoy,
-    
 }
 const consultaAPI  = async (param) => {
     const head = {'Authorization':`Bearer ${token.default.access_token}`}
