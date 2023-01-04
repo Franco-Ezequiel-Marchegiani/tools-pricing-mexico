@@ -137,7 +137,7 @@ const consultaAPI  = async (param) => {
                                 external_references_value:      element?.external_references[0]?.value,
                                 inventory_id:                   element?.inventory_id,
                                 timestamp:                      dateToday().date,
-                                SKU:            variationArray.length == 0 ? sellerSku : sellerSKU_conVariaciones.value_name,   //Si el array de variaciones es vacío, trae el sku de otro lado
+                                SKU:                            variationArray.length == 0 ? sellerSku : sellerSKU_conVariaciones.value_name,   //Si el array de variaciones es vacío, trae el sku de otro lado
                         })
                     }
                 }
