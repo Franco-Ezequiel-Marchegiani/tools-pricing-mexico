@@ -135,20 +135,20 @@ console.log('***Conectando con MELI API***');
             ordersOutput.push({                                                                     //Pusheamos toda la info al array de ordersOutput
                 "Domain-id  items-(endpoint)":              "",
                 "Id Order" :                                idItemsToString,
-                "Status Order" :                            status,                                 //En caso de querer el status aprobado o denegado response.payments[0].status 
+                "Status Order" :                            response.status,                                 //En caso de querer el status aprobado o denegado response.payments[0].status 
                 "Date_created Order":                       daysFormat,
-                "Pack_id Order":                            pack_id,              
-                "category_id Order-Items":                  category_id,
-                "Quantity-Items  Order-items":              cantidadProductos,
-                "Total_amount Order":                       valorTotal,
-                "Unit_price Order-Items":                   unit_price,
-                "Seller_SKU Order-Items":                   seller_sku,
-                "Item_ID Order-Items":                      itemID,
-                "Sale_fee Order-Items":                     sale_fee,
+                "Pack_id Order":                            response.pack_id,              
+                "category_id Order-Items":                  response.order_items[0].item.category_id,
+                "Quantity-Items  Order-items":              response.order_items[0].quantity,
+                "Total_amount Order":                       response.total_amount,
+                "Unit_price Order-Items":                   response.order_items[0].unit_price,
+                "Seller_SKU Order-Items":                   response.order_items[0].item.seller_sku,
+                "Item_ID Order-Items":                      response.order_items[0].item.id,
+                "Sale_fee Order-Items":                     response.order_items[0].sale_fee,
                 "Sale_fee_Total":                           sale_feeTotal,
                 "Shipping_cost items - shipping_options":   shippingCost,
                 timestamp:                                  dateToday().date,
-                Item_ID:                                    itemID,                                 //Traemos esta propiedad con un nombre compatible para utilizarla más adelante
+                Item_ID:                                    response.order_items[0].item.id,                                 //Traemos esta propiedad con un nombre compatible para utilizarla más adelante
                 fullTime:                                   dateCOL_Format, 
                 shipping_status:                            responseShippingDetail?.status, 
             });
