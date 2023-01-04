@@ -1,5 +1,4 @@
 import axios from 'axios';
-import  { GoogleSpreadsheet } from 'google-spreadsheet';
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};                    // /Users/Franco/Desktop/credentials/FC.json
 import meliInventoryManagement from '../credentials/credenciales_definitivas.json' assert { type: "json" };      // Comienzo de exportacion a Gshhets.-
 import dotenv from "dotenv";
@@ -12,6 +11,8 @@ let urlSeller = process.env.URL_SELLER_MELI_INVENTORY_MANAGEMENT;
 dateToday();
 
 /* 
+import  { GoogleSpreadsheet } from 'google-spreadsheet';
+
 FREE COMMITS
 let now                     = new Date();
 let nowNumber               = now.getTime();
@@ -25,12 +26,7 @@ let dosMesesAntes           = now.getMonth() + -1;
 let hora_hoy                = anio + "/" + mes + "/" + dia;
 let hora_hoyHaceDosMeses    = anio + "/" + dosMesesAntes + "/" + dia;
 let date                    = " " + horaMinuto + " " + hora_hoy; */
-const consultaAPI  = async () => {
-    const head = {'Authorization':`Bearer ${token.default.access_token}`};
-    console.log(token.default.access_token);
-    const dataSeller =await llamadaAPI("get",urlSeller,head,{offset: 0})
-
-    /* 
+/* 
     FREE COMMITS
     let dataSeller = await axios({ 
        method:'get',
@@ -38,6 +34,12 @@ const consultaAPI  = async () => {
        headers: head,
        params: {offset: 0}   
    }); */
+const consultaAPI  = async () => {
+    const head = {'Authorization':`Bearer ${token.default.access_token}`};
+    console.log(token.default.access_token);
+    const dataSeller =await llamadaAPI("get",urlSeller,head,{offset: 0})
+
+    
 
    let allItems = [];
    let arrayContainerIDProductSeller = [];
