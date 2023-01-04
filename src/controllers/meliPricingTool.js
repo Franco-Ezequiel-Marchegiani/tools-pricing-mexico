@@ -11,7 +11,6 @@ let urlTodasPublicaciones = process.env.URL_TODAS_LAS_PUBLICACIONES;
 let headerTodasPublicaciones = {Authorization:"Bearer "+token.default.access_token};
 let paramsTodasPublicaciones = {limit:50, offset:0, limit: 100};
 //let urlVenti = "https://ventiapi.azurewebsites.net/api/products/list"
-//let headerVenti = {Authorization: "bearer 89CGDMDQWg0u6OmK_oVcnL4egMuqWpsU2vukOsV3oc9-b_KIDLVzRR2oMdLrW9jDEUnhIiRYakkNEtglSrzd3ckf6vyCdKmwZRzZGk20P-yKJ_9ZPW28Ort1uqBQWTC7pAltM3-SelOMzCjHTlmNwoYob1TDUY6rj4J_VrMdkO0z8i9zs-Nv--pS0rtUN9pgaQTIyOKKCGa6_M0173zNA29ScXJZoyC6NTfz_P2ZmKhqokEW-lW4yrGzQcMW2Drm"}
 
 const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) => {
     console.log("Está funcionando");
