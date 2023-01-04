@@ -124,7 +124,7 @@ const consultaAPI  = async (param) => {
                         let dateOfProduct = new Date(element?.date_created).toISOString().slice(0,10);
                         
                         containerArrayStockProducts.push({                                          //Añadimos al array un objeto con los siguientes valores
-                                MLM:        capturaMLM[indexParams],
+                                MLM:                            capturaMLM[indexParams],
                                 id:                             element?.id,
                                 seller_id:                      element?.seller_id,
                                 date_created:                   dateOfProduct,
