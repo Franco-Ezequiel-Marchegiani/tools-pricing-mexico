@@ -10,7 +10,6 @@ dotenv.config({path:"../../.env"})
 let urlTodasPublicaciones = process.env.URL_TODAS_LAS_PUBLICACIONES;
 let headerTodasPublicaciones = {Authorization:"Bearer "+token.default.access_token};
 let paramsTodasPublicaciones = {limit:50, offset:0, limit: 100};
-//let urlVenti = "https://ventiapi.azurewebsites.net/api/products/list"
 
 const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) => {
     console.log("Está funcionando");
