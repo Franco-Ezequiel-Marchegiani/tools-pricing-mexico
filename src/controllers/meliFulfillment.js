@@ -134,7 +134,7 @@ const consultaAPI  = async (param) => {
                                 result_available_quantity:      element?.result.available_quantity,
                                 result_not_available_quantity:  element?.result.not_available_quantity,
                                 external_references_type:       element?.external_references[0]?.type,
-                                external_references_value:  element?.external_references[0]?.value,
+                                external_references_value:      element?.external_references[0]?.value,
                                 inventory_id:  element?.inventory_id,
                                 timestamp:      dateToday().date,
                                 SKU:            variationArray.length == 0 ? sellerSku : sellerSKU_conVariaciones.value_name,   //Si el array de variaciones es vacío, trae el sku de otro lado
