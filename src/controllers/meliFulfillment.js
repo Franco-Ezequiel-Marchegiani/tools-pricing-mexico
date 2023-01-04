@@ -142,7 +142,7 @@ const consultaAPI  = async (param) => {
                     }
                 }
             }
-        const   credenciales  = meliInventoryManagement;
+        const   credenciales    = meliInventoryManagement;
         let     googleId        = process.env.GOOGLE_ID_MELI_INVENTORY_MANAGEMENT;                        //ID permisos GooglSheet
         let     googleIdPrueba      = "1-uct06J5dgM3HBNZ5U1t_cX6WqfPycvIVp2dL3DS_i8";                   //ID permisos GooglSheet
         exportSheet(googleId,credenciales,'APP_Movimientos',containerArrayStockProducts)
