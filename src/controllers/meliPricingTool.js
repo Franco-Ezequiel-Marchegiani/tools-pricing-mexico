@@ -113,34 +113,11 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                             timestamp:          dateToday().date
                         })
                     }
-
                 }
             }else{
                 let atributesProducts = arrayObjetos[i].attributes;                                               //Obtenemos el array de atributos
                 let sellerSKU_sinVariaciones = atributesProducts.find(element => element.id == "SELLER_SKU");     //Hacemos que encuentre el objeto cuyo id sea Seller_SKU
                 
-                objetoProducto.id                      = arrayObjetos[i].id;
-                objetoProducto.title                   = arrayObjetos[i].title;
-                objetoProducto.condition               = arrayObjetos[i].condition;
-                objetoProducto.listing_type_id         = arrayObjetos[i].listing_type_id;
-                objetoProducto.sellerId                = arrayObjetos[i].seller_id;
-                objetoProducto.sellerName              = "";
-                objetoProducto.status                  = arrayObjetos[i].status;
-                objetoProducto.linkImage               = arrayObjetos[i].thumbnail;
-                objetoProducto.price                   = arrayObjetos[i].price;
-                objetoProducto.base_price              = arrayObjetos[i].base_price;
-                objetoProducto.domain_id               = arrayObjetos[i].domain_id;
-                objetoProducto.category_id             = arrayObjetos[i].category_id;
-                objetoProducto.catalog_listing         = arrayObjetos[i].catalog_listing;
-                objetoProducto.free_shipping           = arrayObjetos[i].shipping.free_shipping;
-                objetoProducto.logistic_type           = arrayObjetos[i].shipping.logistic_type;
-                objetoProducto.me_Flex                 = me_FlexFind;
-                objetoProducto.iva                     = 0.19;
-                objetoProducto.fee                     = 0;
-                objetoProducto.sku                     = sellerSKU_sinVariaciones?.value_name;
-                objetoProducto.costoEnvioGratis        = 0;
-                objetoProducto.varianteProducto        = false;
-
                 arrayElementosObjeto.push({
                     MLM:                arrayObjetos[i].id,
                     title:              arrayObjetos[i].title,
@@ -261,3 +238,26 @@ callMeli(urlTodasPublicaciones, headerTodasPublicaciones,paramsTodasPublicacione
                         objetoProducto.sku                     = sellerSKU_conVariaciones.value_name;
                         objetoProducto.costoEnvioGratis        = 0;
                         objetoProducto.varianteProducto        = true; */
+                        /* 
+                objetoProducto.id                      = arrayObjetos[i].id;
+                objetoProducto.title                   = arrayObjetos[i].title;
+                objetoProducto.condition               = arrayObjetos[i].condition;
+                objetoProducto.listing_type_id         = arrayObjetos[i].listing_type_id;
+                objetoProducto.sellerId                = arrayObjetos[i].seller_id;
+                objetoProducto.sellerName              = "";
+                objetoProducto.status                  = arrayObjetos[i].status;
+                objetoProducto.linkImage               = arrayObjetos[i].thumbnail;
+                objetoProducto.price                   = arrayObjetos[i].price;
+                objetoProducto.base_price              = arrayObjetos[i].base_price;
+                objetoProducto.domain_id               = arrayObjetos[i].domain_id;
+                objetoProducto.category_id             = arrayObjetos[i].category_id;
+                objetoProducto.catalog_listing         = arrayObjetos[i].catalog_listing;
+                objetoProducto.free_shipping           = arrayObjetos[i].shipping.free_shipping;
+                objetoProducto.logistic_type           = arrayObjetos[i].shipping.logistic_type;
+                objetoProducto.me_Flex                 = me_FlexFind;
+                objetoProducto.iva                     = 0.19;
+                objetoProducto.fee                     = 0;
+                objetoProducto.sku                     = sellerSKU_sinVariaciones?.value_name;
+                objetoProducto.costoEnvioGratis        = 0;
+                objetoProducto.varianteProducto        = false; 
+                */
