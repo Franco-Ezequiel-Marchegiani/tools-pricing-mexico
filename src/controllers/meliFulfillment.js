@@ -130,7 +130,7 @@ const consultaAPI  = async (param) => {
                                 date_created:  dateOfProduct,
                                 type:  element?.type,
                                 detail:  element?.detail.available_quantity,
-                                result:  element?.result.total,
+                                result:                         element?.result.total,
                                 result_available_quantity:      element?.result.available_quantity,
                                 result_not_available_quantity:  element?.result.not_available_quantity,
                                 external_references_type:       element?.external_references[0]?.type,
