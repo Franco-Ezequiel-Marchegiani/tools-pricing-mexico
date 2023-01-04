@@ -35,7 +35,6 @@ const consultaAPI  = async (param) => {
         for (let i = 0; i < page; i++) {
             const pageItems =await llamadaAPI("get",urlSeller+`&offset=${i * limit}`,head);
 
-            
             allItems.push(...pageItems.data.results)                                                    //Lo pusheamos al array allItems para obtener todos los productos en dicho array
         }
         /* Extraemos solo el id de cada producto */
@@ -93,8 +92,7 @@ const consultaAPI  = async (param) => {
                 for (let i = 0; i < page; i++) {
                     console.log(params);
                     const responseStockData =await llamadaAPI("get",`https://api.mercadolibre.com/stock/fulfillment/operations/search?`,head, {seller_id: "1206541284",inventory_id: `${filtroInventoryIds[indexParams]}`});
-
-                    
+ 
                     let informacionData = responseStockData.data.results;                               //Almacenamos la data de resultados en una variable
                     if(i == pages){                                                                     //Si es la última página, reseteamos el valor del scroll por 0
                         params.scroll = ""
