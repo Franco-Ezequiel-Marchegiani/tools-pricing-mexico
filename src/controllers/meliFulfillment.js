@@ -129,7 +129,7 @@ const consultaAPI  = async (param) => {
                                 seller_id:  element?.seller_id,
                                 date_created:  dateOfProduct,
                                 type:  element?.type,
-                                detail:  element?.detail.available_quantity,
+                                detail:                         element?.detail.available_quantity,
                                 result:                         element?.result.total,
                                 result_available_quantity:      element?.result.available_quantity,
                                 result_not_available_quantity:  element?.result.not_available_quantity,
