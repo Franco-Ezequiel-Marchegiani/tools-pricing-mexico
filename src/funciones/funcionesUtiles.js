@@ -37,5 +37,38 @@ const llamadaAPI = async(methodType, url, head, params)=>{
     }); 
     return apiCall;
 }
+const exportSheetMKTShare = async (google_id,credencialesOrder, sheetTitle1, sheetTitle2, sheetTitle3, sheetTitle4, arrayData) =>{
+    const documento = new GoogleSpreadsheet(google_id);
+    await documento.useServiceAccountAuth(credencialesOrder);
+    await documento.loadInfo();
+
+    const app_VentasSheet =documento.sheetsByTitle[sheetTitle1];
+    const r1Sheet =documento.sheetsByTitle[sheetTitle2];
+    const forecastSheet =documento.sheetsByTitle[sheetTitle3];
+    const consolidadoSheet =documento.sheetsByTitle[sheetTitle4];
+    
+    //Plasmamos info en el App_Ventas
+    await app_VentasSheet.clearRows();
+    await app_VentasSheet.addRows(arrayData);                                            //importa array de objetos en sheets
+
+    /* Proceso Añadir Fecha a una sola celda */
+    await r1Sheet.loadCells("A1");                                                          //Cargamos la celda a la que modificaremos
+    const celdaR1 = r1Sheet.getCellByA1("A1");                                              //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
+    celdaR1.value = dateToday().date;                                                                     //Pisamos el valor y le colocamos el valor que nosotros queremos
+    await r1Sheet.saveUpdatedCells();                                                       //Guardamos los cambios y los subimos al Sheet
+    
+    await forecastSheet.loadCells("A:B")                                                    //Cargamos la celda a la que modificaremos
+    const celdaForecast = forecastSheet.getCellByA1("A1:B2");                               //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
+    celdaForecast.value = dateToday().date;                                                             //Pisamos el valor y le colocamos el valor que nosotros queremos
+    await forecastSheet.saveUpdatedCells();                                                 //Guardamos los cambios y los subimos al Sheet
+    
+    await consolidadoSheet.loadCells("A2");                                                 //Cargamos la celda a la que modificaremos
+    const celdaConsolidado = consolidadoSheet.getCellByA1("A2");                            //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
+    celdaConsolidado.value = dateToday().date;                                                          //Pisamos el valor y le colocamos el valor que nosotros queremos
+    await consolidadoSheet.saveUpdatedCells();                                              //Guardamos los cambios y los subimos al Sheet
+     
+    console.log('***finalizando impotacion de COL del Mes anterior ***');
+    console.log('***Proceso de COL del Mes anterior finalizado correctamente***');
+}
 //Exportamos un objeto, y adentro mencionamos las variables con funciones las cuales exportamos
-export {exportSheet, dateToday, llamadaAPI}
+export {exportSheet, dateToday, llamadaAPI, exportSheetMKTShare}

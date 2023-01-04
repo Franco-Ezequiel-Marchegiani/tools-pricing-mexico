@@ -87,7 +87,7 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                         
                         let atributesVariantsProducts = llamadaVarianteObjeto.data.attributes;
                         let sellerSKU_conVariaciones = atributesVariantsProducts.find(element => element.id == "SELLER_SKU");     //Hacemos que encuentre el objeto cuyo id sea Seller_SKU
-                        //console.log(arrayObjetos[i].original_price);
+
                         objetoProducto.id                      = arrayObjetos[i].id;
                         objetoProducto.title                   = arrayObjetos[i].title;
                         objetoProducto.condition               = arrayObjetos[i].condition;

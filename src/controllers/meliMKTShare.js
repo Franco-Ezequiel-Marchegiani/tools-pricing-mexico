@@ -3,7 +3,7 @@ import  { GoogleSpreadsheet } from 'google-spreadsheet';
 import credencialesOrder from '../credentials/credenciales_definitivas.json' assert { type: "json" };     
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};
 import dotenv from "dotenv";
-import { dateToday, llamadaAPI } from '../funciones/funcionesUtiles.js';
+import { dateToday, llamadaAPI, exportSheetMKTShare } from '../funciones/funcionesUtiles.js';
 
 dotenv.config({path:"../../.env"});
 let urlDet = process.env.URL_ORDERS;                                                                // Url para llamar por reclamos inviduales
@@ -55,8 +55,6 @@ console.log('***Conectando con MELI API***');
         for (let indexPaginacion = 0; indexPaginacion < totalPaginas; indexPaginacion++) {
             const responseInBucle =await llamadaAPI("get",url,headerTodasPublicaciones,param)
 
-            
-            
             let responseData = responseInBucle.data.results;
             let scroll_id = responseInBucle.data.paging.scroll_id
             params.scroll_id = scroll_id;
@@ -66,7 +64,7 @@ console.log('***Conectando con MELI API***');
        
         //Tiene que ejecutarse antes de esto, acá se recorre cada objeto traido en el array
         for(let r in contenedorDeCadaPaginaReverse){                                                //Recorre el array de objeto, 
-        orders.push({
+            orders.push({
                 order_id:contenedorDeCadaPaginaReverse[r].payments[0].order_id,                     //Y dentro de cada objeto, extrae el order_id y lo añade al array orders
             });
         };
@@ -188,25 +186,37 @@ console.log('***Conectando con MELI API***');
         Este es el endpoint, y se pasa el id por parámetro */
         //console.log(ordersOutput);
         
-        const googleIdCredenciales = process.env.GOOGLE_ID_SHAREMKT;
-
-
-        const arrayStatusMeliIMStock = [{
-                Fecha_meliMKTShare:      dateToday().dia,
-                Hora_meliMKTShare:       dateToday().horaMinuto,
-                Status_meliMKTShare:     response.status,
-                Message_meliMKTShare:    response.statusText,
-        }];
-
         console.log('***iniciando exportacion a Google Sheets***');
-        
         
         //MEX
         let google_idMesAnterior_MEX = process.env.ID_MELIMKTSHARE_MEX_MesAnterior;
         let google_idMesActual_MEX = process.env.ID_MELIMKTSHARE_MEX_MesActual;
 
         //MES ANTERIOR MEX
-        async function shareMKT_MesAnterior_MEX () {
+        exportSheetMKTShare(google_idMesAnterior_MEX,credencialesOrder, 'App_Ventas','R1','Forecast','Consolidado', ordersOutput)
+        console.log('***Proceso de MEX del mes Anterior, finalizado correctamente***');
+
+        //MES ACTUAL MEX
+        exportSheetMKTShare(google_idMesActual_MEX,credencialesOrder, 'App_Ventas','R1','Forecast','Consolidado', ordersOutput)
+        console.log('***Proceso de MEX del mes Actual, finalizado correctamente***');
+        
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+callMeli(urlTodasPublicaciones,headerTodasPublicaciones, paramsTodasPublicaciones, url,headers,params);
+
+/* const googleIdCredenciales = process.env.GOOGLE_ID_SHAREMKT;
+
+        const arrayStatusMeliIMStock = [{
+                Fecha_meliMKTShare:      dateToday().dia,
+                Hora_meliMKTShare:       dateToday().horaMinuto,
+                Status_meliMKTShare:     response.status,
+                Message_meliMKTShare:    response.statusText,
+        }]; */
+/* 
+async function shareMKT_MesAnterior_MEX () {
             const documento = new GoogleSpreadsheet(google_idMesAnterior_MEX);
             await documento.useServiceAccountAuth(credencialesOrder);
             await documento.loadInfo();
@@ -220,7 +230,7 @@ console.log('***Conectando con MELI API***');
             await app_VentasSheet.clearRows();
             await app_VentasSheet.addRows(ordersOutput);                                            //importa array de objetos en sheets
 
-            /* Proceso Añadir Fecha a una sola celda */
+             Proceso Añadir Fecha a una sola celda
             await r1Sheet.loadCells("A1");                                                          //Cargamos la celda a la que modificaremos
             const celdaR1 = r1Sheet.getCellByA1("A1");                                              //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
             celdaR1.value = dateToday().date;                                                                   //Pisamos el valor y le colocamos el valor que nosotros queremos
@@ -254,7 +264,7 @@ console.log('***Conectando con MELI API***');
             await app_VentasSheet.clearRows();
             await app_VentasSheet.addRows(ordersOutput);                                            //importa array de objetos en sheets
 
-            /* Proceso Añadir Fecha a una sola celda */
+             Proceso Añadir Fecha a una sola celda 
             await r1Sheet.loadCells("A1");                                                          //Cargamos la celda a la que modificaremos
             const celdaR1 = r1Sheet.getCellByA1("A1");                                              //Obtenemos el rango de la celda a modificar, en este caso, solo el A1
             celdaR1.value = dateToday().date;                                                                   //Pisamos el valor y le colocamos el valor que nosotros queremos
@@ -270,10 +280,9 @@ console.log('***Conectando con MELI API***');
             celdaConsolidado.value = dateToday().date;                                                          //Pisamos el valor y le colocamos el valor que nosotros queremos
             await consolidadoSheet.saveUpdatedCells();                                              //Guardamos los cambios y los subimos al Sheet
              
-            console.log('***finalizando impotacion de MEX del mes Actual***');
-            console.log('***Proceso de MEX del mes Actual, finalizado correctamente***');
+            
         }          
-        /* async function expartasheetStatus(){
+         async function expartasheetStatus(){
             const documentoStatus = new GoogleSpreadsheet(googleIdCredenciales);
             await documentoStatus.useServiceAccountAuth(credencialesStatus);
             await documentoStatus.loadInfo();
@@ -281,16 +290,10 @@ console.log('***Conectando con MELI API***');
             const sheetStatus = documentoStatus.sheetsByTitle["COL Tools"];
             await sheetStatus.addRows(arrayStatusMeliIMStock);
         }
-        expartasheetStatus(); */
+        expartasheetStatus();
         shareMKT_MesAnterior_MEX();
-        shareMKT_MesActual_MEX();   
-    }
-    catch(error){
-        console.log(error);
-    }
-}
-callMeli(urlTodasPublicaciones,headerTodasPublicaciones, paramsTodasPublicaciones, url,headers,params);
-
+        shareMKT_MesActual_MEX();  
+         */
 //Id's de Google 
         //COL
         /* 
