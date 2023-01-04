@@ -1,5 +1,3 @@
-//import { isTag } from 'cherio/lib/utils';
-//import  { GoogleSpreadsheet } from 'google-spreadsheet';        
 import credencialesOrder from '../credentials/credenciales_definitivas.json' assert { type: "json" };     
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};
 import dotenv from "dotenv";
@@ -280,7 +278,9 @@ async function shareMKT_MesAnterior_MEX () {
             celdaConsolidado.value = dateToday().date;                                                          //Pisamos el valor y le colocamos el valor que nosotros queremos
             await consolidadoSheet.saveUpdatedCells();                                              //Guardamos los cambios y los subimos al Sheet
              
-            
+            //import { isTag } from 'cherio/lib/utils';
+//import  { GoogleSpreadsheet } from 'google-spreadsheet';        
+
         }          
          async function expartasheetStatus(){
             const documentoStatus = new GoogleSpreadsheet(googleIdCredenciales);
