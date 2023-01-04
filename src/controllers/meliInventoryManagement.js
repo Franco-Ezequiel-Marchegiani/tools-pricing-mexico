@@ -27,20 +27,16 @@ const consultaAPI  = async () => {
        /* Extraemos la totalidad de los productos */
        for (let i = 0; i < page; i++) {
         const pageItems =await llamadaAPI("get",urlSeller+`&offset=${i * limit}`,head)
-
-           
            allItems.push(...pageItems.data.results);
        }
        
       /* Extraemos solo el id de cada producto */
        for (let index = 0; index < allItems.length; index++) {
            objContenedor.id    =   allItems[index].id;
-
            arrayContainerIDProductSeller.push({id: objContenedor.id});
        }
        //console.log(arrayContainerIDProductSeller);
        
-
        /* Extraemos el dato inventory_id */
        let arrayContenedorInventoryIds = []
        let capturaMCO = []
@@ -54,7 +50,6 @@ const consultaAPI  = async () => {
             inventory_id_deCadaProducto = responseAtributeData.data.inventory_id                            //Almacenamos cada valor de "inventory_id" en una variable
            let inventoryIdResponseAtributeDataVariations = responseAtributeData.data.variations;            //Y por otro lado, el de las variaciones
            let lengthArrayVariations = inventoryIdResponseAtributeDataVariations.length;                    //Sacamos el largo, ya que no es el mismo, para luego iterarlo en un array
-           
 
            responseAtributes = responseAtributeData.data.attributes
            
