@@ -27,41 +27,17 @@ let params = {
     scroll_id: ""
 };
 
-
-
 console.log('***Conectando con MELI API***');
 
     let orders=[]
-// Se realiza primer llamado, para tomar primera muestra y datos de paginacion
-const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTodasPublicaciones,url,head,param) => {    
+    // Se realiza primer llamado, para tomar primera muestra y datos de paginacion
+    const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTodasPublicaciones,url,head,param) => {    
     //console.log(response);
     const response =await llamadaAPI("get",url,headerTodasPublicaciones,param)
-/* 
-    FREE COMMITS
-    let response = await axios({
-        method:'get',
-        url: url,     
-        headers: headerTodasPublicaciones,
-        params: param,
-    }).catch(function (error) {
-        console.log("Something's wrong");
-      });  
-    console.log(response); */
+
     try{
         /* Horarios */
         dateToday();
-        /* 
-        FREE COMMITS
-        let now         = new Date();
-        let nowNumber   = now.getTime();
-        let horas       = now.getHours();
-        let minutos     = ("0" + now.getMinutes() ).slice(-2);                                      //Esto para que el formato de minuto sea "09" y no "9"
-        let horaMinuto  = " " + horas + ":" + minutos;
-        let dia         = ("0" + now.getDate()).slice(-2);                                          //Esto para que el formato de hora sea "09" y no "9"
-        let anio        = now.getFullYear();
-        let mes         = now.getMonth() + 1;
-        let hora_hoy    = dia + "/" + mes + "/" + anio;
-        let date        = hora_hoy + " " + horaMinuto; */
         
         const allItems = [];                                                                        //Array  contenedor del total de productos ()
         const arrayContenedorLinkMLA = [];                                                          //Contiene los links de cada producto
@@ -79,14 +55,7 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         for (let indexPaginacion = 0; indexPaginacion < totalPaginas; indexPaginacion++) {
             const responseInBucle =await llamadaAPI("get",url,headerTodasPublicaciones,param)
 
-            /* 
-            FREE COMMITS
-            let responseInBucle = await axios({
-                method:'get',
-                url: url,     
-                headers: headerTodasPublicaciones,
-                params: param,
-            }); */
+            
             
             let responseData = responseInBucle.data.results;
             let scroll_id = responseInBucle.data.paging.scroll_id
@@ -110,14 +79,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             let resultPage =i*result_page;
             params.offset = resultPage;
             const pageResponse =await llamadaAPI("get",url,head,param)
-            /* 
-            FREE COMMITS
-            let pageResponse = await axios ({
-                method:'get',
-                url:url,
-                headers:head,
-                params:param
-            }); */
             let resultadosCadaOrden = pageResponse
             
             for(r in resultadosCadaOrden){
@@ -133,34 +94,11 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             //console.log(orders[i].order_id);
             const ordersDet =await llamadaAPI("get",urlDet+orders[i].order_id,head)
 
-            /* 
-            FREE COMMITS
-            let ordersDet = await axios ({
-                method:'get',
-                url : urlDet+orders[i].order_id,
-                headers : head,
-            });  */  
             const shippingOrdersDet =await llamadaAPI("get",urlDet+orders[i].order_id+"/shipments",head)
-
-            /* 
-            FREE COMMITS
-            let shippingOrdersDet = await axios ({
-                method:'get',
-                url : urlDet+orders[i].order_id+"/shipments",
-                headers : head,
-            }).catch(function (error) { 
-                console.log("Nada por aquí mi loco");
-            });  */
+            
             let responseShippingDetail = shippingOrdersDet?.data
             
-            //console.log(shippingOrdersDet.data.order_id);
-            //console.log(responseShippingDetail);
-            //console.log("-");
-            //console.log(responseShippingDetail?.order_id);
-            //console.log(responseShippingDetail?.status);
-            //console.log("-");
             let response = ordersDet.data;                                                          // Obtenemos el dato del horario desde la API
-            //console.log(response);
             //Acá se soluciona la diferencia horaria para tener el dato más certero
             let horarioColombia = new Date(response.date_created)                                   //Filtrando el dato de fecha solo Año, Mes y día
             let apiDate = new Date(horarioColombia)
@@ -197,8 +135,7 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
             let shippingCost        = response.payments[0].shipping_cost;
             if (pack_id == null || pack_id == "null") {                                             //Añadí una condicional, si está vacío, que devuelva un " - "
                 pack_id = "null"
-            }//2022-12-16T11:40:31.000Z
-            //console.log(pack_id);
+            }
             ordersOutput.push({                                                                     //Pusheamos toda la info al array de ordersOutput
                 "Domain-id  items-(endpoint)":              "",
                 "Id Order" :                                idItemsToString,
@@ -217,20 +154,14 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
                 timestamp:                                  dateToday().date,
                 Item_ID:                                    itemID,                                 //Traemos esta propiedad con un nombre compatible para utilizarla más adelante
                 fullTime:                                   dateCOL_Format, 
-                shipping_status:                                   responseShippingDetail?.status, 
+                shipping_status:                            responseShippingDetail?.status, 
             });
-        }//166.60
+        }
         
         /* Extracción de datos Domain_id */
         for (let i = 0; i < ordersOutput.length; i++) {                                             //Itera el array de Objetos (todos los productos)
             
             const callingItems =await llamadaAPI("get",process.env.URL_ITEM_DETAIL + ordersOutput[i].Item_ID)
-            /* 
-            FREE COMM
-            let callingItems = await axios({
-                method: "get",
-                url: process.env.URL_ITEM_DETAIL + ordersOutput[i].Item_ID
-            }); */
             let responseCall = callingItems.data.domain_id;
             console.log(callingItems.data.domain_id);
             ordersOutput[i]["Domain-id  items-(endpoint)"] = responseCall;
@@ -241,13 +172,6 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
         for (let i = 0; i < orders.length; i++) {
             const shippingCost =await llamadaAPI("get",linkShippingCost + ordersOutput[i].Item_ID, head)
 
-            /* 
-            FREE COMMITS
-            let shippingCost = await axios ({
-                method:'get',
-                url : linkShippingCost + ordersOutput[i].Item_ID,
-                headers : head,
-            });   */
             let responseEndpoint = shippingCost.data;                                                   //Se almacena el valor del endpoint en una variable
             let coverageOfEachShipping = Object.values(responseEndpoint)[0]                             //Se extrae el primer elemento del objeto del endpoint
             let objetoConPrecio = coverageOfEachShipping !== undefined ? coverageOfEachShipping.coverage : "Undefined";  //Condicional en caso de que la respuesta sea undefined
@@ -276,12 +200,7 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 
         console.log('***iniciando exportacion a Google Sheets***');
         
-        //Id's de Google 
-        //COL
-        /* 
-        let google_idMesAnterior_COL = process.env.ID_MELIMKTSHARE_COL_MesAnterior;
-        let google_idMesActual_COL = process.env.ID_MELIMKTSHARE_COL_MesActual; 
-        */
+        
         //MEX
         let google_idMesAnterior_MEX = process.env.ID_MELIMKTSHARE_MEX_MesAnterior;
         let google_idMesActual_MEX = process.env.ID_MELIMKTSHARE_MEX_MesActual;
@@ -372,4 +291,87 @@ const callMeli = async (urlTodasPublicaciones,headerTodasPublicaciones, paramsTo
 }
 callMeli(urlTodasPublicaciones,headerTodasPublicaciones, paramsTodasPublicaciones, url,headers,params);
 
-
+//Id's de Google 
+        //COL
+        /* 
+        let google_idMesAnterior_COL = process.env.ID_MELIMKTSHARE_COL_MesAnterior;
+        let google_idMesActual_COL = process.env.ID_MELIMKTSHARE_COL_MesActual; 
+        */
+/* 
+            FREE COMMITS
+            let ordersDet = await axios ({
+                method:'get',
+                url : urlDet+orders[i].order_id,
+                headers : head,
+            });  */  
+            /* 
+            FREE COMMITS
+            let shippingOrdersDet = await axios ({
+                method:'get',
+                url : urlDet+orders[i].order_id+"/shipments",
+                headers : head,
+            }).catch(function (error) { 
+                console.log("Nada por aquí mi loco");
+            });  */
+            /* 
+    FREE COMMITS
+    let response = await axios({
+        method:'get',
+        //2022-12-16T11:40:31.000Z
+            //console.log(pack_id);
+            //166.60
+        url: url,     
+        headers: headerTodasPublicaciones,
+        params: param,
+    }).catch(function (error) {
+        console.log("Something's wrong");
+      });  
+    console.log(response); */
+        /* 
+        FREE COMMITS
+        let now         = new Date();
+        let nowNumber   = now.getTime();
+        let horas       = now.getHours();
+        let minutos     = ("0" + now.getMinutes() ).slice(-2);                                      //Esto para que el formato de minuto sea "09" y no "9"
+        let horaMinuto  = " " + horas + ":" + minutos;
+        let dia         = ("0" + now.getDate()).slice(-2);                                          //Esto para que el formato de hora sea "09" y no "9"
+        let anio        = now.getFullYear();
+        let mes         = now.getMonth() + 1;
+        let hora_hoy    = dia + "/" + mes + "/" + anio;
+        let date        = hora_hoy + " " + horaMinuto; */
+        /* 
+            FREE COMMITS
+            let responseInBucle = await axios({
+                method:'get',
+                url: url,     
+                headers: headerTodasPublicaciones,
+                params: param,
+            }); */
+            //console.log(shippingOrdersDet.data.order_id);
+            //console.log(responseShippingDetail);
+            //console.log("-");
+            //console.log(responseShippingDetail?.order_id);
+            //console.log(responseShippingDetail?.status);
+            //console.log("-");
+            //console.log(response);
+            /* 
+            FREE COMMITS
+            let pageResponse = await axios ({
+                method:'get',
+                url:url,
+                headers:head,
+                params:param
+            }); */
+            /* 
+            FREE COMM
+            let callingItems = await axios({
+                method: "get",
+                url: process.env.URL_ITEM_DETAIL + ordersOutput[i].Item_ID
+            }); */
+            /* 
+            FREE COMMITS
+            let shippingCost = await axios ({
+                method:'get',
+                url : linkShippingCost + ordersOutput[i].Item_ID,
+                headers : head,
+            });   */
