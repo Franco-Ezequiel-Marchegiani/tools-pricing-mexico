@@ -127,7 +127,7 @@ const consultaAPI  = async (param) => {
                                 MLM:        capturaMLM[indexParams],
                                 id:         element?.id,
                                 seller_id:  element?.seller_id,
-                                date_created:  dateOfProduct,
+                                date_created:                   dateOfProduct,
                                 type:                           element?.type,
                                 detail:                         element?.detail.available_quantity,
                                 result:                         element?.result.total,
