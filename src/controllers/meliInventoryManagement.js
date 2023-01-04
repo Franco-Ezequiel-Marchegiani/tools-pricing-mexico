@@ -3,43 +3,16 @@ import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:
 import meliInventoryManagement from '../credentials/credenciales_definitivas.json' assert { type: "json" };      // Comienzo de exportacion a Gshhets.-
 import dotenv from "dotenv";
 import { exportSheet, dateToday, llamadaAPI } from '../funciones/funcionesUtiles.js';
-
 dotenv.config({path:"../../.env"});
 
 let urlSeller = process.env.URL_SELLER_MELI_INVENTORY_MANAGEMENT;
 /* Horarios */
 dateToday();
 
-/* 
-import  { GoogleSpreadsheet } from 'google-spreadsheet';
-
-FREE COMMITS
-let now                     = new Date();
-let nowNumber               = now.getTime();
-let horas                   = now.getHours();
-let minutos                 = ("0" + now.getMinutes() ).slice(-2);                                          //Esto para que el formato de minuto sea "09" y no "9"
-let horaMinuto              = " " + horas + ":" + minutos;
-let dia                     = ("0" + now.getDate()).slice(-2);                                              //Esto para que el formato de hora sea "09" y no "9"
-let anio                    = now.getFullYear();
-let mes                     = now.getMonth() + 1;
-let dosMesesAntes           = now.getMonth() + -1;
-let hora_hoy                = anio + "/" + mes + "/" + dia;
-let hora_hoyHaceDosMeses    = anio + "/" + dosMesesAntes + "/" + dia;
-let date                    = " " + horaMinuto + " " + hora_hoy; */
-/* 
-    FREE COMMITS
-    let dataSeller = await axios({ 
-       method:'get',
-       url: urlSeller,
-       headers: head,
-       params: {offset: 0}   
-   }); */
 const consultaAPI  = async () => {
     const head = {'Authorization':`Bearer ${token.default.access_token}`};
     console.log(token.default.access_token);
     const dataSeller =await llamadaAPI("get",urlSeller,head,{offset: 0})
-
-    
 
    let allItems = [];
    let arrayContainerIDProductSeller = [];
@@ -55,15 +28,7 @@ const consultaAPI  = async () => {
        for (let i = 0; i < page; i++) {
         const pageItems =await llamadaAPI("get",urlSeller+`&offset=${i * limit}`,head)
 
-           /* 
-           COMMITS
-           let pageItems = await axios({ 
-               method:'get',
-               url: urlSeller+`&offset=${i * limit}`,
-               headers: head,
-           }).catch(function (error) {
-            console.log("Something's wrong");
-            }); */
+           
            allItems.push(...pageItems.data.results);
        }
        
@@ -85,15 +50,7 @@ const consultaAPI  = async () => {
        let variationArrayId = []
        for (let i = 0; i < allItems.length; i++) {
             const responseAtributeData =await llamadaAPI("get",`https://api.mercadolibre.com/items/${arrayContainerIDProductSeller[i].id}`,head)
-           /* 
-           FREE COMMITS
-           let responseAtributeData = await axios({                                                         //Hace el llamado para extraer la info del producto del Vendedor
-               method:'get',
-               url: `https://api.mercadolibre.com/items/${arrayContainerIDProductSeller[i].id}`,
-               headers: head,
-           }).catch(function (error) {
-            console.log("Something's wrong");
-          });  */  
+             
             inventory_id_deCadaProducto = responseAtributeData.data.inventory_id                            //Almacenamos cada valor de "inventory_id" en una variable
            let inventoryIdResponseAtributeDataVariations = responseAtributeData.data.variations;            //Y por otro lado, el de las variaciones
            let lengthArrayVariations = inventoryIdResponseAtributeDataVariations.length;                    //Sacamos el largo, ya que no es el mismo, para luego iterarlo en un array
@@ -133,16 +90,6 @@ const consultaAPI  = async () => {
                 /* Hasta acá tenemos el SKU del producto */
                 const responseAtributeData =await llamadaAPI("get",`https://api.mercadolibre.com/inventories/${filtroInventoryIds[indexInventory]}/stock/fulfillment`,head)
 
-                /* 
-                FREE COMMITS
-                let responseStockData = await axios({                                                       //Ejecutamos la segunda llamada, para extraer el resto de datos (totalStock, available_quantity,etc.)
-                    method:'get',
-                    url: `https://api.mercadolibre.com/inventories/${filtroInventoryIds[indexInventory]}/stock/fulfillment`,
-                    headers: head,
-                }).catch(function (error) {
-                    console.log("Something's wrong");
-                  }); */
-                //console.log(responseStockData.data);
                 //Almacenamos los valores en variables
                 let inventory_id                      = responseStockData.data.inventory_id;
                 let totalStock                      = responseStockData.data.total;
@@ -160,19 +107,22 @@ const consultaAPI  = async () => {
                     totalStock:                     totalStock,
                     available_quantity:             available_quantity,
                     not_available_quantity:         not_available_quantity,
-                    //not_available_detail:           not_available_detail,
                     external_referencesId:          external_referencesId,
-                    //external_referencesVariationId: external_referencesVariationId,
                     timestamp: dateToday().date,
                 });
         }
-       
        const   credenciales  = meliInventoryManagement;
        let     googleId      = process.env.GOOGLE_ID_MELI_INVENTORY_MANAGEMENT_MEX;                             //ID permisos GooglSheet
        console.log('***Importando datos a spreadsheet***');
        exportSheet(googleId,credenciales,'APP_StockFull',containerArrayStockProducts);
        console.log("***Finalizó proceso importación***");
-       /* 
+    } catch (error) {
+       console.error(error);
+    }  
+}
+consultaAPI()
+
+/* 
        FREE COMMITS
        (async () =>{
                    
@@ -191,8 +141,57 @@ const consultaAPI  = async () => {
            exportaSheet()
            console.log("***Finalizó proceso importación***");
        })(); */
-   } catch (error) {
-       console.error(error);
-   }  
-}
-consultaAPI()
+       /* 
+                FREE COMMITS
+                let responseStockData = await axios({                                                       //Ejecutamos la segunda llamada, para extraer el resto de datos (totalStock, available_quantity,etc.)
+                    method:'get',
+                    url: `https://api.mercadolibre.com/inventories/${filtroInventoryIds[indexInventory]}/stock/fulfillment`,
+                    headers: head,
+                }).catch(function (error) {
+                    console.log("Something's wrong");
+                  }); */
+                  //not_available_detail:           not_available_detail,
+                  //external_referencesVariationId: external_referencesVariationId,
+                //console.log(responseStockData.data);
+                /* 
+import  { GoogleSpreadsheet } from 'google-spreadsheet';
+
+FREE COMMITS
+let now                     = new Date();
+let nowNumber               = now.getTime();
+let horas                   = now.getHours();
+let minutos                 = ("0" + now.getMinutes() ).slice(-2);                                          //Esto para que el formato de minuto sea "09" y no "9"
+let horaMinuto              = " " + horas + ":" + minutos;
+let dia                     = ("0" + now.getDate()).slice(-2);                                              //Esto para que el formato de hora sea "09" y no "9"
+let anio                    = now.getFullYear();
+let mes                     = now.getMonth() + 1;
+let dosMesesAntes           = now.getMonth() + -1;
+let hora_hoy                = anio + "/" + mes + "/" + dia;
+let hora_hoyHaceDosMeses    = anio + "/" + dosMesesAntes + "/" + dia;
+let date                    = " " + horaMinuto + " " + hora_hoy; */
+/* 
+    FREE COMMITS
+    let dataSeller = await axios({ 
+       method:'get',
+       url: urlSeller,
+       headers: head,
+       params: {offset: 0}   
+   }); */
+   /* 
+           COMMITS
+           let pageItems = await axios({ 
+               method:'get',
+               url: urlSeller+`&offset=${i * limit}`,
+               headers: head,
+           }).catch(function (error) {
+            console.log("Something's wrong");
+            }); */
+    /* 
+           FREE COMMITS
+           let responseAtributeData = await axios({                                                         //Hace el llamado para extraer la info del producto del Vendedor
+               method:'get',
+               url: `https://api.mercadolibre.com/items/${arrayContainerIDProductSeller[i].id}`,
+               headers: head,
+           }).catch(function (error) {
+            console.log("Something's wrong");
+          });  */
