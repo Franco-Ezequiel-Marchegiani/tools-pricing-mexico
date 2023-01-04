@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import  { GoogleSpreadsheet } from 'google-spreadsheet';
+//import  { GoogleSpreadsheet } from 'google-spreadsheet';
 import * as token from "/Users/Franco/Desktop/credentials/MX.json" assert {type:'json'};                // /Users/Franco/Desktop/credentials/FC.json
 import meliInventoryManagement from '../credentials/credenciales_definitivas.json' assert { type: "json" };  // Comienzo de exportacion a Gshhets.-
 import dotenv from "dotenv";
