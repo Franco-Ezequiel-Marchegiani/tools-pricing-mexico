@@ -86,6 +86,8 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                         let atributesVariantsProducts = llamadaVarianteObjeto.data.attributes;
                         let sellerSKU_conVariaciones = atributesVariantsProducts.find(element => element.id == "SELLER_SKU");     //Hacemos que encuentre el objeto cuyo id sea Seller_SKU
 
+                        /* 
+                        CLEANING CODE
                         objetoProducto.id                      = arrayObjetos[i].id;
                         objetoProducto.title                   = arrayObjetos[i].title;
                         objetoProducto.condition               = arrayObjetos[i].condition;
@@ -108,32 +110,32 @@ const callMeli = async (urlTodasPublicaciones,head, paramsTodasPublicaciones) =>
                         objetoProducto.fee                     = 0;
                         objetoProducto.sku                     = sellerSKU_conVariaciones.value_name;
                         objetoProducto.costoEnvioGratis        = 0;
-                        objetoProducto.varianteProducto        = true;
+                        objetoProducto.varianteProducto        = true; */
 
                         arrayElementosObjeto.push({
-                            MLM:                objetoProducto.id,
-                            Estado:             objetoProducto.status,
-                            title:              objetoProducto.title,
-                            Seller:             objetoProducto.sellerName,
-                            condition:          objetoProducto.condition,
-                            Categoria:          objetoProducto.category_id,
-                            Imagen:             objetoProducto.linkImage,
-                            listing_type_id:    objetoProducto.listing_type_id,
-                            Envio_Gratis:       objetoProducto.free_shipping,
-                            costoEnvioGratis:   objetoProducto.costoEnvioGratis,
-                            original_price:     objetoProducto.original_price,
-                            price:              objetoProducto.price,
-                            sellerId:           objetoProducto.sellerId,
-                            base_price:         objetoProducto.base_price,
-                            domain_id:          objetoProducto.domain_id,
-                            catalog_listing:    objetoProducto.catalog_listing, 
-                            logistic_type:      objetoProducto.logistic_type,
-                            tipoDeEnvio:        objetoProducto.tipoDeEnvio,
-                            me_Flex:            objetoProducto.me_Flex,      
-                            iva:                objetoProducto.iva,
-                            fee:                objetoProducto.fee,
-                            sku:                objetoProducto.sku,
-                            variation:          objetoProducto.varianteProducto,
+                            MLM:                arrayObjetos[i].id,
+                            title:              arrayObjetos[i].title,
+                            condition:          arrayObjetos[i].condition,
+                            listing_type_id:    arrayObjetos[i].listing_type_id,
+                            sellerId:           arrayObjetos[i].seller_id,
+                            Seller:             "",
+                            Estado:             arrayObjetos[i].status,
+                            Imagen:             arrayObjetos[i].thumbnail,
+                            original_price:     arrayObjetos[i].original_price,
+                            price:              arrayObjetos[i].price,
+                            base_price:         arrayObjetos[i].base_price,
+                            domain_id:          arrayObjetos[i].domain_id,
+                            Categoria:          arrayObjetos[i].category_id,
+                            catalog_listing:    arrayObjetos[i].catalog_listing, 
+                            Envio_Gratis:       arrayObjetos[i].shipping.free_shipping,
+                            logistic_type:      arrayObjetos[i].shipping.logistic_type,
+                            tipoDeEnvio:        arrayObjetos[i].shipping.mode,
+                            me_Flex:            me_FlexFind, 
+                            iva:                0.19,
+                            fee:                0,
+                            sku:                sellerSKU_conVariaciones.value_name,
+                            costoEnvioGratis:   0,
+                            variation:          true,
                             timestamp:          dateToday().date
                         })
                     }
